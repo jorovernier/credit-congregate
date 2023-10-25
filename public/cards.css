@@ -1,7 +1,20 @@
+#filter-main {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+#filter {
+    background-color: rgb(78, 84, 111);
+    width: 500px;
+}
+
 main {
     width: 80%;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .card-card {
@@ -74,42 +87,42 @@ h1 {
     align-items: center;
 }
 
+.c-img {
+    width: 350px;
+    margin: 10px;
+}
+
+.c-info {
+    height: 250px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
 #cat-sec {
-    height: 500px;
+    height: 100%;
     width: 700px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    overflow: scroll;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    box-sizing: border-box;
 }
 
 .cat-card {
     background-color: rgb(240, 205, 123);
-    min-height: 50px;
     width: 98%;
     margin: 5px;
     border-radius: 5px;
     box-shadow: 5px 5px 0px grey;
     padding: 5px;
     box-sizing: border-box;
-}
-
-.c-img {
-    width: 250px;
-    margin: 10px;
-}
-
-.c-info {
-    height: 300px;
-    width: 250px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px;
-}
-
-.c {
-    font-weight: 300;
 }
 
 #X {
@@ -120,6 +133,6 @@ h1 {
     top: -10px;
     right: -10px;
     border-radius: 20px;
-    border: 3px solid black;
+    border: none;
     text-align: center;
 }

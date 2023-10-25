@@ -56,8 +56,11 @@ function getMoreInfo(event){
             <div id='left-column'>
                 <img class='c-img' src='${card_img}'/>
                 <div class='c-info'>
-                    <h2 class='c'>${bank_name}</h2>
-                    <h1 class='c'>${card_name}</h1>
+                    <div>
+                        <h2 class='c'>${bank_name}</h2>
+                        <h1 class='c'>${card_name}</h1>
+                    </div>
+                    <p class='c'>Score: blank</p>
                     <p class='c'>APR: ${apr}</p>
                     <p class='c'>AF: ${af === 0 ? 'None':`$${af}`}</p>
                     <p class='c'>Type: ${reward_type}</p>
