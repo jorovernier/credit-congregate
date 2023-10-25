@@ -2,12 +2,24 @@
     width: 100vw;
     display: flex;
     justify-content: center;
-    /* align-items: center; */
+}
+
+#sidebar {
+    background-color: rgb(78, 84, 111);
+    width: 500px;
+    display: flex;
+    justify-content: center;
 }
 
 #filter {
-    background-color: rgb(78, 84, 111);
-    width: 500px;
+    background-color: antiquewhite;
+    height: 500px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 30%;
+
 }
 
 main {

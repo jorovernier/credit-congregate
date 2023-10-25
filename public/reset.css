@@ -66,6 +66,18 @@ header {
     align-items: center;
     padding: 10px;
     box-sizing: border-box;
+	text-decoration: none;
+}
+
+#ayy {
+	width: 250px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	text-decoration: none;
+	font-size: 28px;
+	font-weight: 600;
+	color: black;
 }
 
 nav {
@@ -79,6 +91,6 @@ nav {
 }
 
 .other {
-	text-decoration: none;
 	color: rgb(78, 84, 111);
+	text-decoration: none;
 }

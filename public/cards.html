@@ -12,8 +12,9 @@
 </head>
 <body>
     <header>
-        <a href="./index.html">
+        <a id="ayy" href="./index.html">
             <img id="logo" src="https://cdn-icons-png.flaticon.com/512/6963/6963703.png"/>
+            <h1>Credit Congregate</h1>
         </a>
         <nav>
             <a style="color: black;">All Cards</a>
@@ -21,7 +22,20 @@
         </nav>
     </header>
     <div id="filter-main">
-        <form id="filter"></form>
+        <section id="sidebar">
+            <form id="filter">
+
+                <label>Filter by Bank</label>
+                <input type="text" name="by-bank"/>
+
+                <label>Filter by Category</label>
+                <input type="text" name="by-cat"/>
+
+                <label></label>
+                <input type="submit"/>
+
+            </form>
+        </section>
         <main></main>
     </div>
 

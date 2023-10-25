@@ -31,7 +31,7 @@ function getMoreInfo(event){
     moreBtns.forEach(btn => btn.style.display = 'none')
 
     axios.get(`${base}/card/${event.target.id}`).then((res) => {
-        let {af, apr, bank_name, card_id, card_img, card_name, flat_rate, notes, reward_type, sub} = res.data[0]
+        let {af, apr, bank_name, card_id, card_img, card_name, flat_rate, notes, reward_type, score, sub} = res.data[0]
 
         let symbol;
         if(reward_type === 'c'){
@@ -60,7 +60,7 @@ function getMoreInfo(event){
                         <h2 class='c'>${bank_name}</h2>
                         <h1 class='c'>${card_name}</h1>
                     </div>
-                    <p class='c'>Score: blank</p>
+                    <p class='c'>Score: ${score}</p>
                     <p class='c'>APR: ${apr}</p>
                     <p class='c'>AF: ${af === 0 ? 'None':`$${af}`}</p>
                     <p class='c'>Type: ${reward_type}</p>
