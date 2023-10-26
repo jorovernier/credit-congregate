@@ -1,6 +1,7 @@
 const base = 'http://localhost:6789'
 
 const main = document.querySelector('main')
+const wee = document.querySelector('.wee')
 
 function getCards(){
     axios.get(`${base}/cards`).then((res) => {
@@ -17,7 +18,7 @@ function getCards(){
                         <h2 class='bank'>${bank_name}</h2>
                         <h1 class='title'>${card_name}</h1>
                     </div>
-                    <button class='more-btn' id='${card_id}'>More</button>
+                    <button class='more-btn steez' id='${card_id}'>More</button>
                 </div>
             `
             main.appendChild(cardCard)
@@ -29,7 +30,7 @@ function getCards(){
 function getMoreInfo(event){
     let moreBtns = document.querySelectorAll('.more-btn')
     moreBtns.forEach(btn => btn.style.display = 'none')
-
+    document.documentElement.scrollTop = 0
     axios.get(`${base}/card/${event.target.id}`).then((res) => {
         let {af, apr, bank_name, card_id, card_img, card_name, flat_rate, notes, reward_type, score, sub} = res.data[0]
 
@@ -118,5 +119,31 @@ function getMoreInfo(event){
     })
 
 }
+
+function swoopy(){
+    let sidebar = document.getElementById('sidebar')
+    let form = document.getElementById('filter')
+    
+    wee.classList.toggle('moved')
+
+    if(sidebar.classList == "go-out"){
+        sidebar.classList = "go-in";
+    } else {
+        sidebar.classList = "go-out";
+    }
+
+    if (sidebar.style.width === "400px") {
+        sidebar.style.width = "0px";
+    } else {
+        sidebar.style.width = "400px";
+    }
+
+    if (form.style.display === "flex") {
+        form.style.display = "none";
+    } else {
+        form.style.display = "flex";
+    }
+}
+wee.addEventListener('click', swoopy)
 
 getCards()

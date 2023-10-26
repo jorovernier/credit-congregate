@@ -17,25 +17,39 @@
             <h1>Credit Congregate</h1>
         </a>
         <nav>
-            <a style="color: black;">All Cards</a>
+            <a style="color: black; font-size: 20px;">All Cards</a>
             <a class="other" href="./profile.html">Profile</a>
         </nav>
     </header>
     <div id="filter-main">
-        <section id="sidebar">
-            <form id="filter">
+        <div id="button-work-inator">
+            <section id="sidebar">
+                <form id="filter">
+                    <h1>Filtering Form</h1>
 
-                <label>Filter by Bank</label>
-                <input type="text" name="by-bank"/>
+                    <section id="inputs">
+                        <div>
+                            <label for="by-bank">Filter by Bank</label>
+                            <input class="in" type="text" id="by-bank"/>
+                            <input id="bank-sub" class="steez" type="submit"/>
+                        </div>
+                        
+                        <div>
+                            <label for="by-cat">Filter by Category</label>
+                            <input class="in" type="text" id="by-cat"/>
+                            <input id="cat-sub" class="steez" type="submit"/>
+                        </div>
+                        <div>
+                            <label for="by-rate">Filter by Reward Rate</label>
+                            <input class="in" type="text" id="by-rate"/>
+                            <input id="rate-sub" class="steez" type="submit"/>
+                        </div>
+                    </section>
+                </form>
+            </section>
+            <button class="wee">?</button>
+        </div>
 
-                <label>Filter by Category</label>
-                <input type="text" name="by-cat"/>
-
-                <label></label>
-                <input type="submit"/>
-
-            </form>
-        </section>
         <main></main>
     </div>
 
