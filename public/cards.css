@@ -203,15 +203,3 @@ main {
     padding: 5px;
     box-sizing: border-box;
 }
-
-#X {
-    background-color: rgb(209, 76, 57);
-    height: 30px;
-    width: 30px;
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    border-radius: 20px;
-    border: none;
-    text-align: center;
-}

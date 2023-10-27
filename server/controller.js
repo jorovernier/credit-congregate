@@ -43,5 +43,15 @@ module.exports = {
             ON u.card_id = c.card_id
             WHERE user_id = ${id};
         `).then(dbRes => res.status(200).send(dbRes[0]))
+    },
+    getWantedCards: (req, res) => {
+        let {id} = req.params;
+        seq.query(`
+            SELECT u.want_id, c.card_name, c.bank_name, c.card_img
+            FROM user_wants AS u
+            JOIN cards AS c
+            ON u.card_id = c.card_id
+            WHERE user_id = ${id};
+        `).then(dbRes => res.status(200).send(dbRes[0]))
     }
 }

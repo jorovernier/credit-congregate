@@ -73,7 +73,7 @@ function getMoreInfo(event){
                 </section>
             </div>
             <section id='cat-sec'></section>
-            <button id='X'>X</button>
+            <button class='remove' id='X'>X</button>
         `
         document.getElementById('X').addEventListener('click', getCards)
 
