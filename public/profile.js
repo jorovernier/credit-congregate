@@ -25,14 +25,14 @@ function getUserCards(){
     axios.get(`${base}/user/cards/1`).then((res) => {
         have.innerText = ''
         for(let i = 0; i < res.data.length; i++){
-            const {af, apr, bank_name, card_img, card_name, cl, nickname, uc_id, uses} = res.data[i]
+            const {af, apr, bank_name, card_img, card_name, cl, nickname, uc_id, uses, cust_img} = res.data[i]
 
             let haveCard = document.createElement('div')
             haveCard.setAttribute('id', `have-${uc_id}`)
             haveCard.classList.add('pc-card')
 
             haveCard.innerHTML = `
-                <img class='pc-img' src='${card_img}'/>
+                <img class='pc-img' src='${cust_img ? cust_img:card_img}'/>
                 <section class='title-info'>
                     <hgroup class='bank-title'>
                         <h2>${bank_name}</h2>

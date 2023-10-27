@@ -37,7 +37,7 @@ module.exports = {
     getUserCards: (req, res) => {
         let {id} = req.params;
         seq.query(`
-            SELECT u.uc_id, u.apr, u.cl, u.nickname, u.uses, c.card_name, c.bank_name, c.card_img, c.af
+            SELECT u.uc_id, u.apr, u.cl, u.cust_img, u.nickname, u.uses, c.card_name, c.bank_name, c.card_img, c.af
             FROM user_cards AS u
             JOIN cards AS c
             ON u.card_id = c.card_id
