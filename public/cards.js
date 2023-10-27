@@ -44,6 +44,9 @@ function getMoreInfo(event){
         } else if(reward_type === 'p'){
             reward_type = 'Points'
             symbol = 'X'
+        } else if(reward_type === 'n'){
+            reward_type = 'No Rewards'
+            symbol = ''
         }
 
         
@@ -98,10 +101,15 @@ function getMoreInfo(event){
         let flatRate = document.createElement('div')
         flatRate.setAttribute('id', `flat-cat`)
         flatRate.classList.add('cat-card')
-        console.log(section.childNodes)
-        if(section.childElementCount === 0){
+        console.log(reward_type)
+        if(section.childElementCount === 0 && reward_type !== 'No Rewards'){
             flatRate.innerHTML = `
             <p id='single-pringle'>This is a flat rate card. That means there are no special categories to earn higher percentages. You'll get unlimited ${flat_rate}${symbol} ${reward_type.toLowerCase()} on all purchases.</p>
+            `
+            flatRate.style.width = '400px'
+        } else if(section.childElementCount === 0 && reward_type === 'No Rewards'){
+            flatRate.innerHTML = `
+            <p id='single-pringle'>This card does not provide any kind of cashback or rewards points.</p>
             `
             flatRate.style.width = '400px'
         } else {
