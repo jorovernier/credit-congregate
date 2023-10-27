@@ -14,10 +14,10 @@ function getCards(){
             cardCard.innerHTML = `
                 <img class='card-img' src='${card_img}'/>
                 <div class='title-btn'>
-                    <div class='bank-title'>
+                    <hgroup class='bank-title'>
                         <h2 class='bank'>${bank_name}</h2>
                         <h1 class='title'>${card_name}</h1>
-                    </div>
+                    </hgroup>
                     <button class='more-btn steez' id='${card_id}'>More</button>
                 </div>
             `
@@ -56,18 +56,18 @@ function getMoreInfo(event){
         clicked.innerHTML = `
             <div id='left-column'>
                 <img class='c-img' src='${card_img}'/>
-                <div class='c-info'>
-                    <div>
+                <section class='c-info'>
+                    <hgroup>
                         <h2 class='c'>${bank_name}</h2>
                         <h1 class='c'>${card_name}</h1>
-                    </div>
+                    </hgroup>
                     <p class='c'>Score: ${score}</p>
                     <p class='c'>APR: ${apr}</p>
                     <p class='c'>AF: ${af === 0 ? 'None':`$${af}`}</p>
                     <p class='c'>Type: ${reward_type}</p>
                     <p class='c'>SUB: ${sub === '' ? 'None':sub}</p>
                     <p class='c'>${notes}</p>
-                </div>
+                </section>
             </div>
             <section id='cat-sec'></section>
             <button id='X'>X</button>
