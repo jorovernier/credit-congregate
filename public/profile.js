@@ -88,7 +88,7 @@ function getWantedCards() {
                         <h2>${bank_name}</h2>
                         <h1>${card_name}</h1>
                     </hgroup>
-                    <button class='edit-house'><img id='wedit-${want_id}' class='edit-icon' src='./pics/edit.png'/></button>
+                    <button id='wbtn-${want_id}' class='edit-house'><img id='wedit-${want_id}' class='edit-icon' src='./pics/edit.png'/></button>
                 </section>
                 <textarea disabled id='wnotes-${want_id}' class='want-notes'>${notes}</textarea>
                 <button class='remove'>X</button>
@@ -108,6 +108,11 @@ function getWantedCards() {
 function editWantNotes(event) {
     editStatus = true
     let {id} = event.target
+    document.getElementById(`wbtn-${id.split('-')[1]}`).classList = 'keep'
+    let otherEdits = document.querySelectorAll('.edit-house')
+    for(let i = 0; i < otherEdits.length; i++){
+        otherEdits[i].style.display = 'none'
+    }
     document.getElementById('wnotes-'+id.split('-')[1]).toggleAttribute('disabled')
     document.getElementById(`wedit-${id.split('-')[1]}`).setAttribute('src', './pics/save.png')
 }

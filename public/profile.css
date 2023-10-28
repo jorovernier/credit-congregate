@@ -96,6 +96,12 @@ main {
     width: 30px;
     border: none;
 }
+.keep {
+    background-color: white;
+    height: 30px;
+    width: 30px;
+    border: none;
+}
 
 .edit-icon {
     height: 25px;
