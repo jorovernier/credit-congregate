@@ -47,11 +47,21 @@ module.exports = {
     getWantedCards: (req, res) => {
         let {id} = req.params;
         seq.query(`
-            SELECT u.want_id, c.card_name, c.bank_name, c.card_img
+            SELECT u.want_id, u.notes, c.card_name, c.bank_name, c.card_img
             FROM user_wants AS u
             JOIN cards AS c
             ON u.card_id = c.card_id
             WHERE user_id = ${id};
         `).then(dbRes => res.status(200).send(dbRes[0]))
+    },
+    editWantedNotes: (req, res) => {
+        let {id} = req.params;
+        let {newText, wantID} = req.body;
+        console.log(req.body)
+        seq.query(`
+            UPDATE user_wants
+            SET notes = '${newText}'
+            WHERE want_id = ${wantID} AND user_id = ${id};
+        `).then(() => res.status(200).send('gucci'))
     }
 }

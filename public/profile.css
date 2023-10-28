@@ -1,5 +1,4 @@
 main {
-    height: 100vh;
     width: 100vw;
     display: flex;
     justify-content: space-between;
@@ -9,19 +8,38 @@ main {
 
 #prof-sec {
     background-color: rgb(78, 84, 111);
-    height: 100%;
+    min-height: 100vh;
     width: 400px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 #prof-img {
-    width: 250px;
+    width: 230px;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
+
+#prof-info {
+    height: 300px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    font-size: 28px;
+}
+
+/* #prof-info > hgroup {
+    margin: 10px;
+} */
 
 /* USER CARDS */
 
 #have-want {
+    height: auto;
     min-width: 75%;
     display: flex;
     flex-direction: column;
@@ -60,6 +78,7 @@ main {
 }
 
 .pc-img {
+    max-height: 350px;
     width: 250px;
     margin: 10px;
 }
@@ -69,6 +88,18 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.edit-house {
+    background-color: white;
+    height: 30px;
+    width: 30px;
+    border: none;
+}
+
+.edit-icon {
+    height: 25px;
+    width: 25px;
 }
 
 .pc-card > div {
@@ -99,5 +130,11 @@ span {
 }
 
 #want > div {
-    height: 250px;
+    height: 280px;
+}
+
+.want-notes {
+    width: 250px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

@@ -4,19 +4,25 @@ const sideInfo = document.getElementById('prof-sec')
 const have = document.getElementById('have')
 const want = document.getElementById('want')
 
+let editStatus = false
+
 function getUserInfo(){
     axios.get(`${base}/user/1`).then((res) => {
         let {email, first_name, fico, last_name, password, profile_pic, user_id, username} = res.data[0]
         sideInfo.innerHTML = `
-            <img id="prof-img" src=${profile_pic}/>
-            <h2>${first_name} ${last_name}</h2>
-            <h1>${username}</h1>
-            <p>FICO Score: ${fico}</p>
-            <section>
-                Hidden Section:
+            <img id='prof-img' src=${profile_pic}/>
+            <div id='prof-info'>
+                <hgroup>
+                    <h2>${first_name} ${last_name}</h2>
+                    <h1>${username}</h1>
+                </hgroup>
                 <p>${email}</p>
-                <p>${password}</p>
-            </section>
+                <div>
+                    <span>FICO Score: <h1 class='scooch'>${fico}</h1> </span>
+                    <span>Total AF: <h1 id='total-af' class='scooch'></h1> </span>
+                    <span>Total CL: <h1 id='total-cl' class='scooch'></h1> </span>
+                </div>
+            </div>
         `
     })
 }
@@ -24,8 +30,13 @@ function getUserInfo(){
 function getUserCards(){
     axios.get(`${base}/user/cards/1`).then((res) => {
         have.innerText = ''
+        let totalAF = 0
+        let totalCL = 0
         for(let i = 0; i < res.data.length; i++){
             const {af, apr, bank_name, card_img, card_name, cl, nickname, uc_id, uses, cust_img} = res.data[i]
+            totalAF += af
+            totalCL += cl
+            // console.log(uses.join(', '))
 
             let haveCard = document.createElement('div')
             haveCard.setAttribute('id', `have-${uc_id}`)
@@ -38,7 +49,7 @@ function getUserCards(){
                         <h2>${bank_name}</h2>
                         <h1>${card_name}</h1>
                     </hgroup>
-                    <button>E</button>
+                    <button class='edit-house'><img class='edit-icon' src='./pics/edit.png'/></button>
                 </section>
                 <div>
                     <span>Nickname: <h1 class='scooch'>${nickname}</h1> </span>
@@ -49,13 +60,14 @@ function getUserCards(){
                     <span>Limit: <h1 class='scooch'>$${cl}</h1> </span>
                 </section>
                 <div>
-                    <span>Uses: <h1 class='scooch'>${uses}</h1> </span> 
+                    <span>Uses: <h1 class='scooch'>${uses.join(', ')}</h1> </span> 
                 </div>
                 <button class='remove'>X</button>
             `
-
             have.appendChild(haveCard)
         }
+        document.getElementById('total-af').textContent = `$${totalAF}`
+        document.getElementById('total-cl').textContent = `$${totalCL}`
     })
 }
 
@@ -63,7 +75,7 @@ function getWantedCards() {
     axios.get(`${base}/user/wants/1`).then((res) => {
         want.innerText = ''
         for(let i = 0; i < res.data.length; i++){
-            const {want_id, card_name, bank_name, card_img} = res.data[i]
+            const {want_id, notes, card_name, bank_name, card_img} = res.data[i]
 
             let wantCard = document.createElement('div')
             wantCard.setAttribute('id', `want-${want_id}`)
@@ -76,12 +88,36 @@ function getWantedCards() {
                         <h2>${bank_name}</h2>
                         <h1>${card_name}</h1>
                     </hgroup>
+                    <button class='edit-house'><img id='wedit-${want_id}' class='edit-icon' src='./pics/edit.png'/></button>
                 </section>
+                <textarea disabled id='wnotes-${want_id}' class='want-notes'>${notes}</textarea>
                 <button class='remove'>X</button>
             `
-
             want.appendChild(wantCard)
+            document.getElementById(`wedit-${want_id}`).addEventListener('click', (e) => {
+                if(!editStatus){
+                    editWantNotes(e)
+                } else {
+                    sendChanges(document.getElementById(`wnotes-${want_id}`).value, e.target.id.split('-')[1])
+                }
+            })
         }
+    })
+}
+
+function editWantNotes(event) {
+    editStatus = true
+    let {id} = event.target
+    // console.log(document.getElementById('wnotes-'+id.split('-')[1]))
+    document.getElementById('wnotes-'+id.split('-')[1]).toggleAttribute('disabled')
+    document.getElementById(`wedit-${id.split('-')[1]}`).setAttribute('src', './pics/save.png')
+}
+function sendChanges(newText, wantID) {
+    editStatus = false
+    axios.put(`${base}/user/wants/1`, {newText, wantID}).then((res) => {
+        getUserInfo()
+        getUserCards()
+        getWantedCards()
     })
 }
 
