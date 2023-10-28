@@ -57,11 +57,18 @@ module.exports = {
     editWantedNotes: (req, res) => {
         let {id} = req.params;
         let {newText, wantID} = req.body;
-        console.log(req.body)
-        seq.query(`
-            UPDATE user_wants
-            SET notes = '${newText}'
-            WHERE want_id = ${wantID} AND user_id = ${id};
-        `).then(() => res.status(200).send('gucci'))
+        if(newText.includes("'")){
+            newText = newText.split("'").join("''")
+        }
+        if(newText.match(/[;{}()|[\]\\]/g)){
+            res.status(400).send(newText.match(/[;{}()|[\]\\]/g))
+        } else {
+            seq.query(`
+                UPDATE user_wants
+                SET notes = '${newText}'
+                WHERE want_id = ${wantID} AND user_id = ${id};
+            `).then(() => res.status(200).send('gucci'))
+            .catch((err) => res.status(405).send(err))
+        }
     }
 }

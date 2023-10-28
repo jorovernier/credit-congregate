@@ -108,19 +108,27 @@ function getWantedCards() {
 function editWantNotes(event) {
     editStatus = true
     let {id} = event.target
-    // console.log(document.getElementById('wnotes-'+id.split('-')[1]))
     document.getElementById('wnotes-'+id.split('-')[1]).toggleAttribute('disabled')
     document.getElementById(`wedit-${id.split('-')[1]}`).setAttribute('src', './pics/save.png')
 }
 function sendChanges(newText, wantID) {
     editStatus = false
-    axios.put(`${base}/user/wants/1`, {newText, wantID}).then((res) => {
-        getUserInfo()
-        getUserCards()
-        getWantedCards()
+    axios.put(`${base}/user/wants/1`, {newText, wantID}).then(() => {
+        reload()
+    }).catch((err) => {
+        if(err.response.data.length){
+            alert('Please remove the following characters from your notes: '+err.response.data.join(' '))
+        } else {
+            alert("Your notes can't be longer than 62 characters!")
+        }
+        reload()
     })
 }
 
-getUserInfo()
-getUserCards()
-getWantedCards()
+function reload(){
+    getUserInfo()
+    getUserCards()
+    getWantedCards()
+}
+
+reload()
