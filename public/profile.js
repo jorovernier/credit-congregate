@@ -4,6 +4,11 @@ const sideInfo = document.getElementById('prof-sec')
 const have = document.getElementById('have')
 const want = document.getElementById('want')
 
+let lgog = document.getElementById('logo')
+lgog.addEventListener('click', () => {
+    axios.post(`${base}/seed`)
+})
+
 let editStatus = false
 
 function getUserInfo(){
@@ -43,28 +48,52 @@ function getUserCards(){
             haveCard.classList.add('pc-card')
 
             haveCard.innerHTML = `
-                <img class='pc-img' src='${cust_img ? cust_img:card_img}'/>
+                <div class='sup-bro bro-${uc_id}'>
+                    <img class='pc-img' src='${cust_img ? cust_img:card_img}'/>
+                </div>
                 <section class='title-info'>
                     <hgroup class='bank-title'>
                         <h2>${bank_name}</h2>
                         <h1>${card_name}</h1>
                     </hgroup>
-                    <button class='edit-house'><img class='edit-icon' src='./pics/edit.png'/></button>
+                    <button id='hbtn-${uc_id}' class='edit-house'><img id='hedit-${uc_id}' class='edit-icon' src='./pics/edit.png'/></button>
                 </section>
                 <div>
-                    <span>Nickname: <h1 class='scooch'>${nickname}</h1> </span>
+                    <span class='have-span-${uc_id}'>Nickname: <h1 class='scooch'>${nickname}</h1> </span>
                 </div>
                 <section class='nums'>
                     <span>AF: <h1 class='scooch'>$${af}</h1> </span>
-                    <span>APR: <h1 class='scooch'>${apr}%</h1> </span>
-                    <span>Limit: <h1 class='scooch'>$${cl}</h1> </span>
+                    <span class='have-span-${uc_id}'>APR: <h1 class='scooch'>${apr}%</h1> </span>
+                    <span class='have-span-${uc_id}'>Limit: <h1 class='scooch'>$${cl}</h1> </span>
                 </section>
-                <div>
-                    <span>Uses: <h1 class='scooch'>${uses.join(', ')}</h1> </span> 
+                <div class='span-ta'>
+                    <span>Uses: <textarea disabled id='hnotes-${uc_id}' class='uses'>${uses}</textarea> </span> 
                 </div>
                 <button class='remove'>X</button>
             `
             have.appendChild(haveCard)
+
+            document.getElementById(`hedit-${uc_id}`).addEventListener('click', (e) => {                
+                if(!editStatus){
+                    document.querySelector(`.bro-${uc_id}`).innerHTML = `<input class='have-input inp-big' id='himg-${uc_id}' placeholder='Leave blank for original image' value='${cust_img ? cust_img:card_img}'/>`
+                    let haveSpans = document.querySelectorAll(`.have-span-${uc_id}`)
+                    for(let i = 0; i < haveSpans.length; i++){
+                        let text = haveSpans[i].childNodes[1].textContent
+                        haveSpans[i].innerHTML = `<input class='have-input inp-small' id='hinp-${i}' value='${text}'/>`
+                    }
+                    document.getElementById(`hinp-0`).style.width = '100px'
+                    editTextArea(e, 'h')
+                } else {
+                    let body = {
+                        img: document.getElementById(`himg-${uc_id}`).value,
+                        nickname: document.getElementById(`hinp-0`).value,
+                        apr: document.getElementById(`hinp-1`).value,
+                        limit: document.getElementById(`hinp-2`).value,
+                        uses: document.getElementById(`hnotes-${uc_id}`).value
+                    }
+                    sendChanges(body, e.target.id.split('-')[1], 'have')
+                }
+            })
         }
         document.getElementById('total-af').textContent = `$${totalAF}`
         document.getElementById('total-cl').textContent = `$${totalCL}`
@@ -96,35 +125,36 @@ function getWantedCards() {
             want.appendChild(wantCard)
             document.getElementById(`wedit-${want_id}`).addEventListener('click', (e) => {
                 if(!editStatus){
-                    editWantNotes(e)
+                    editTextArea(e, 'w')
                 } else {
-                    sendChanges(document.getElementById(`wnotes-${want_id}`).value, e.target.id.split('-')[1])
+                    sendChanges(document.getElementById(`wnotes-${want_id}`).value, e.target.id.split('-')[1], 'wants')
                 }
             })
         }
     })
 }
 
-function editWantNotes(event) {
+function editTextArea(event, prefix) {
     editStatus = true
-    let {id} = event.target
-    document.getElementById(`wbtn-${id.split('-')[1]}`).classList = 'keep'
+    let id = event.target.id.split('-')[1]
+    document.getElementById(`${prefix}btn-${id}`).classList = 'keep'
     let otherEdits = document.querySelectorAll('.edit-house')
     for(let i = 0; i < otherEdits.length; i++){
         otherEdits[i].style.display = 'none'
     }
-    document.getElementById('wnotes-'+id.split('-')[1]).toggleAttribute('disabled')
-    document.getElementById(`wedit-${id.split('-')[1]}`).setAttribute('src', './pics/save.png')
+    document.getElementById(`${prefix}notes-${id}`).toggleAttribute('disabled')
+    document.getElementById(`${prefix}edit-${id}`).setAttribute('src', './pics/save.png')
 }
-function sendChanges(newText, wantID) {
+
+function sendChanges(newText, itemID, endpoint) {
     editStatus = false
-    axios.put(`${base}/user/wants/1`, {newText, wantID}).then(() => {
+    axios.put(`${base}/user/${endpoint}/1`, {newText, itemID}).then(() => {
         reload()
     }).catch((err) => {
-        if(err.response.data.length){
+        if(err.response.data.length <= 40){
             alert('Please remove the following characters from your notes: '+err.response.data.join(' '))
         } else {
-            alert("Your notes can't be longer than 62 characters!")
+            alert(err.response.data)
         }
         reload()
     })

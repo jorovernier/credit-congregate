@@ -12,10 +12,9 @@ const seq = new Sequelize(process.env.CONNECTION_STRING, {
 })
 
 const {getCards, getCardInfo} = require('./controllers/controller')
-const {getUserInfo, getUserCards, getWantedCards, editWantedNotes} = require('./controllers/user')
+const {getUserInfo, getUserCards, getWantedCards, addAquired, addWanted, editAquiredInfo, editWantedNotes} = require('./controllers/user')
 
 app.post('/seed', (req, res) => (seq.query(seedQuery).then(() => res.sendStatus(200))))
-// seed()
 
 app.get('/cards', getCards)
 app.get('/card/:id', getCardInfo)
@@ -23,6 +22,8 @@ app.get('/card/:id', getCardInfo)
 app.get('/user/:id', getUserInfo)
 app.get('/user/cards/:id', getUserCards)
 app.get('/user/wants/:id', getWantedCards)
+
+app.put('/user/have/:id', editAquiredInfo)
 app.put('/user/wants/:id', editWantedNotes)
 
 app.listen(process.env.PORT, () => console.log(`Applying for credit cards on port ${process.env.PORT}.`))
