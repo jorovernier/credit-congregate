@@ -22,8 +22,9 @@ app.get('/card/:id', getCardInfo)
 app.get('/user/:id', getUserInfo)
 app.get('/user/cards/:id', getUserCards)
 app.get('/user/wants/:id', getWantedCards)
-
-app.put('/user/have/:id', editAquiredInfo)
+app.post('/user/have', addAquired)
+app.post('/user/want', addWanted)
+app.put('/user/haves/:id', editAquiredInfo)
 app.put('/user/wants/:id', editWantedNotes)
 
 app.listen(process.env.PORT, () => console.log(`Applying for credit cards on port ${process.env.PORT}.`))

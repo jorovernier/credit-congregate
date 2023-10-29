@@ -35,10 +35,18 @@ module.exports = {
         `).then(dbRes => res.status(200).send(dbRes[0]))
     },
     addAquired: (req, res) => {
-
+        const {cardID, userID} = req.body
+        seq.query(`
+            INSERT INTO user_cards (user_id, card_id, apr, cl, nickname, uses, cust_img)
+            VALUES (${userID}, ${cardID}, NULL, NULL, '', '', '');
+        `).then(() => res.sendStatus(200))
     },
     addWanted: (req, res) => {
-
+        const {cardID, userID} = req.body
+        seq.query(`
+            INSERT INTO user_wants (user_id, card_id, notes)
+            VALUES (${userID}, ${cardID}, '');
+        `).then(() => res.sendStatus(200))
     },
     editAquiredInfo: (req, res) => {
         let {id} = req.params;

@@ -27,11 +27,11 @@ function getCards(){
     })
 }
 
-function getMoreInfo(event){
+function getMoreInfo(e){
     let moreBtns = document.querySelectorAll('.more-btn')
     moreBtns.forEach(btn => btn.style.display = 'none')
     document.documentElement.scrollTop = 0
-    axios.get(`${base}/card/${event.target.id}`).then((res) => {
+    axios.get(`${base}/card/${e.target.id}`).then((res) => {
         let {af, apr, bank_name, card_id, card_img, card_name, flat_rate, notes, reward_type, score, sub} = res.data[0]
 
         let symbol;
@@ -50,7 +50,7 @@ function getMoreInfo(event){
         }
 
         
-        let clicked = document.getElementById(`card-${event.target.id}`)
+        let clicked = document.getElementById(`card-${e.target.id}`)
         clicked.classList = 'clicked'
 
         let index = Array.prototype.indexOf.call(main.children, clicked)
@@ -60,10 +60,16 @@ function getMoreInfo(event){
             <div id='left-column'>
                 <img class='c-img' src='${card_img}'/>
                 <section class='c-info'>
-                    <hgroup>
-                        <h2 class='c'>${bank_name}</h2>
-                        <h1 class='c'>${card_name}</h1>
-                    </hgroup>
+                    <div id='head-btns'>
+                        <hgroup>
+                            <h2 class='c'>${bank_name}</h2>
+                            <h1 class='c'>${card_name}</h1>
+                        </hgroup>
+                        <section>
+                            <button class='btn-house'><img title='Have' id='have-check-${e.target.id}' class='house-icon' src='./pics/check.png'/></button>
+                            <button class='btn-house'><img title='Want' id='want-star-${e.target.id}' class='house-icon' src='./pics/star.png'/></button>
+                        </section>
+                    </div>
                     <p class='c'>Score: ${score}</p>
                     <p class='c'>APR: ${apr}</p>
                     <p class='c'>AF: ${af === 0 ? 'None':`$${af}`}</p>
@@ -76,6 +82,12 @@ function getMoreInfo(event){
             <button class='remove' id='X'>X</button>
         `
         document.getElementById('X').addEventListener('click', getCards)
+        document.getElementById(`have-check-${e.target.id}`).addEventListener('click', (e) => {
+            addToProfile(e, 'have')
+        })
+        document.getElementById(`want-star-${e.target.id}`).addEventListener('click', (e) => {
+            addToProfile(e, 'want')
+        })
 
         let section = document.getElementById('cat-sec')
         for(let i = 1; i < res.data.length; i++){
@@ -101,7 +113,6 @@ function getMoreInfo(event){
         let flatRate = document.createElement('div')
         flatRate.setAttribute('id', `flat-cat`)
         flatRate.classList.add('cat-card')
-        console.log(reward_type)
         if(section.childElementCount === 0 && reward_type !== 'No Rewards'){
             flatRate.innerHTML = `
             <p id='single-pringle'>This is a flat rate card. That means there are no special categories to earn higher percentages. You'll get unlimited ${flat_rate}${symbol} ${reward_type.toLowerCase()} on all purchases.</p>
@@ -125,7 +136,13 @@ function getMoreInfo(event){
             singlePringle.style.margin = '5px'
         }
     })
+}
 
+function addToProfile(e, endpoint){
+    let cardID = e.target.id.split('-')[2]
+    axios.post(`${base}/user/${endpoint}`, {cardID, userID: 1}).then((res) => {
+        console.log(res.data)
+    })
 }
 
 function swoopy(){

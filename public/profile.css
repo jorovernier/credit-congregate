@@ -47,6 +47,7 @@ main {
 }
 
 #have {
+    min-height: 300px;
     display: flex;
     flex-wrap: wrap;
 }
@@ -155,6 +156,7 @@ span {
 /* WANTED CARDS */
 
 #want {
+    min-height: 250px;
     display: flex;
     flex-wrap: wrap;
 }

@@ -29,6 +29,8 @@ function getUserInfo(){
                 </div>
             </div>
         `
+        getUserCards()
+        getWantedCards()
     })
 }
 
@@ -41,7 +43,6 @@ function getUserCards(){
             const {af, apr, bank_name, card_img, card_name, cl, nickname, uc_id, uses, cust_img} = res.data[i]
             totalAF += af
             totalCL += cl
-            // console.log(uses.join(', '))
 
             let haveCard = document.createElement('div')
             haveCard.setAttribute('id', `have-${uc_id}`)
@@ -59,12 +60,12 @@ function getUserCards(){
                     <button id='hbtn-${uc_id}' class='edit-house'><img id='hedit-${uc_id}' class='edit-icon' src='./pics/edit.png'/></button>
                 </section>
                 <div>
-                    <span class='have-span-${uc_id}'>Nickname: <h1 class='scooch'>${nickname}</h1> </span>
+                    <span class='have-span-${uc_id}'>Nickname: <h1 class='scooch'>${nickname ? nickname:card_name}</h1> </span>
                 </div>
                 <section class='nums'>
                     <span>AF: <h1 class='scooch'>$${af}</h1> </span>
-                    <span class='have-span-${uc_id}'>APR: <h1 class='scooch'>${apr}%</h1> </span>
-                    <span class='have-span-${uc_id}'>Limit: <h1 class='scooch'>$${cl}</h1> </span>
+                    <span class='have-span-${uc_id}'>APR: <h1 class='scooch'>${apr ? apr:'--'}%</h1> </span>
+                    <span class='have-span-${uc_id}'>Limit: <h1 class='scooch'>$${cl ? cl:'--'}</h1> </span>
                 </section>
                 <div class='span-ta'>
                     <span>Uses: <textarea disabled id='hnotes-${uc_id}' class='uses'>${uses}</textarea> </span> 
@@ -91,12 +92,12 @@ function getUserCards(){
                         limit: document.getElementById(`hinp-2`).value,
                         uses: document.getElementById(`hnotes-${uc_id}`).value
                     }
-                    sendChanges(body, e.target.id.split('-')[1], 'have')
+                    sendChanges(body, e.target.id.split('-')[1], 'haves')
                 }
             })
+            document.getElementById('total-af').textContent = `$${totalAF}`
+            document.getElementById('total-cl').textContent = `$${totalCL}`
         }
-        document.getElementById('total-af').textContent = `$${totalAF}`
-        document.getElementById('total-cl').textContent = `$${totalCL}`
     })
 }
 
@@ -117,7 +118,7 @@ function getWantedCards() {
                         <h2>${bank_name}</h2>
                         <h1>${card_name}</h1>
                     </hgroup>
-                    <button id='wbtn-${want_id}' class='edit-house'><img id='wedit-${want_id}' class='edit-icon' src='./pics/edit.png'/></button>
+                    <button id='wbtn-${want_id}' class='edit-house'><img title='Edit' id='wedit-${want_id}' class='edit-icon' src='./pics/edit.png'/></button>
                 </section>
                 <textarea disabled id='wnotes-${want_id}' class='want-notes'>${notes}</textarea>
                 <button class='remove'>X</button>
@@ -134,9 +135,9 @@ function getWantedCards() {
     })
 }
 
-function editTextArea(event, prefix) {
+function editTextArea(e, prefix) {
     editStatus = true
-    let id = event.target.id.split('-')[1]
+    let id = e.target.id.split('-')[1]
     document.getElementById(`${prefix}btn-${id}`).classList = 'keep'
     let otherEdits = document.querySelectorAll('.edit-house')
     for(let i = 0; i < otherEdits.length; i++){
@@ -149,21 +150,15 @@ function editTextArea(event, prefix) {
 function sendChanges(newText, itemID, endpoint) {
     editStatus = false
     axios.put(`${base}/user/${endpoint}/1`, {newText, itemID}).then(() => {
-        reload()
+        getUserInfo()
     }).catch((err) => {
         if(err.response.data.length <= 40){
             alert('Please remove the following characters from your notes: '+err.response.data.join(' '))
         } else {
             alert(err.response.data)
         }
-        reload()
+        getUserInfo()
     })
 }
 
-function reload(){
-    getUserInfo()
-    getUserCards()
-    getWantedCards()
-}
-
-reload()
+getUserInfo()

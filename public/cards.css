@@ -177,6 +177,24 @@ main {
     box-sizing: border-box;
 }
 
+#head-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-house {
+    background-color: white;
+    height: 30px;
+    width: 30px;
+    border: none;
+}
+
+.house-icon {
+    height: 25px;
+    width: 25px;
+}
+
 #cat-sec {
     height: 100%;
     width: 700px;
