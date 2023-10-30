@@ -22,31 +22,79 @@
             <a class="other" href="./profile.html">Profile</a>
         </nav>
     </header>
-    <div id="filter-main">
+    <div id="filter-sort-main">
         <div id="button-work-inator">
             <section id="sidebar">
-                <form id="filter">
-                    <h1>Filtering Form</h1>
+                <div id="sort">
+                    <h1>Sort By</h1>
 
-                    <section id="inputs">
-                        <div>
-                            <label for="by-bank">Filter by Bank</label>
-                            <input class="in" type="text" id="by-bank"/>
-                            <input id="bank-sub" class="steez" type="submit"/>
-                        </div>
-                        
-                        <div>
-                            <label for="by-cat">Filter by Category</label>
-                            <input class="in" type="text" id="by-cat"/>
-                            <input id="cat-sub" class="steez" type="submit"/>
-                        </div>
-                        <div>
-                            <label for="by-rate">Filter by Reward Rate</label>
-                            <input class="in" type="text" id="by-rate"/>
-                            <input id="rate-sub" class="steez" type="submit"/>
-                        </div>
+                    <section class="inputs">
+                        <form id="sort-form">
+                            <select class="in" id="sort-select">
+                                <option value="bank_name,ASC" selected>Bank Name: A to Z</option>
+                                <option value="bank_name,DESC" >Bank Name: Z to A</option>
+                                <option value="card_name,ASC" >Card Name: A to Z</option>
+                                <option value="card_name,DESC" >Card Name: Z to A</option>
+                                <option value="af,ASC" >Annual Fee: Low to High</option>
+                                <option value="af,DESC" >Annual Fee: High to Low</option>
+                            </select>
+                            <input id="sort-sub" class="steez" type="submit"/>
+                        </form>
                     </section>
-                </form>
+                </div>
+
+                <div id="filter">
+                    <h1>Filter By</h1>
+
+                    <section class="inputs">
+                        <form class="filter-form">
+                            <label id="cards-bank_name-LIKE" for="by-bank">Bank</label>
+                            <input placeholder="Capitalization matters!" class="in" type="text" id="by-bank"/>
+                            <input id="bank-sub" class="steez" type="submit"/>
+                        </form>
+                        
+                        <form class="filter-form deluxe">
+                            <label id="categories-tags-=" for="by-cat">Category</label>
+                            <input placeholder="Try grocery or transportation" class="in" type="text" id="by-cat"/>
+                            <input id="cat-sub" class="steez" type="submit"/>
+                        </form>
+
+                        <form class="filter-form deluxe">
+                            <label id="categories-reward_rate" for="rate-sub">Reward Rate</label>
+                            <div>
+                                <select id="gorl">
+                                    <option value=">" selected>Greater Than</option>
+                                    <option value="<">Less Than</option>
+                                </select>
+                                <select id="gorl-num">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                            <input id="rate-sub" class="steez" type="submit"/>
+                        </form>
+
+                        <form class="filter-form">
+                            <label id="cards-reward_type-=" for="by-type">Reward Type</label>
+                            <select class="in" id="by-type">
+                                <option value="c" selected>Cashback</option>
+                                <option value="p">Points</option>
+                                <option value="m">Miles</option>
+                                <option value="n">None</option>
+                            </select>
+                            <input id="type-sub" class="steez" type="submit"/>
+                        </form>
+                    </section>
+                </div>
             </section>
             <button class="wee">?</button>
         </div>

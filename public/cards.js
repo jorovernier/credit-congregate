@@ -1,13 +1,45 @@
 const base = 'http://localhost:6789'
+let terms = ['bank_name', 'ASC'];
+let filterTerms;
 
 const main = document.querySelector('main')
 const wee = document.querySelector('.wee')
+const sortForm = document.getElementById('sort-form')
+const filterForms = document.querySelectorAll('.filter-form')
 
-function getCards(){
-    axios.get(`${base}/cards`).then((res) => {
+function isFilter(){
+    if(filterTerms) {
+        if(filterTerms[filterTerms.length - 1] === 'mega'){
+            console.log('hit')
+            axios.get(`${base}/cards/megafilter?filter=${filterTerms}`).then((res) => {
+                console.log('hit')
+                displayCard(res.data)
+            })
+        } else if(filterTerms){
+            axios.get(`${base}/cards/filter?filter=${filterTerms}&order=${terms}`).then((res) => {
+                displayCard(res.data)
+            })
+        }
+    } else {
+        getCards(terms)
+    }
+}
+
+function getCards(sortTerms){
+    axios.get(`${base}/cards?sort=${sortTerms[0]}&order=${sortTerms[1]}`).then((res) => {
+        displayCard(res.data)
+    })
+}
+
+function displayCard(arr){
+    if(arr.length === 0) {
+        main.innerHTML = `
+            <div id='none-found'>No cards found!</div>
+        `
+    } else {
         main.innerText = ''
-        for(let i = 0; i < res.data.length; i++){
-            const {bank_name, card_id, card_img, card_name} = res.data[i]
+        for(let i = 0; i < arr.length; i++){
+            const {bank_name, card_id, card_img, card_name} = arr[i]
             let cardCard = document.createElement('div')
             cardCard.setAttribute('id', `card-${card_id}`)
             cardCard.classList.add('card-card')
@@ -24,7 +56,7 @@ function getCards(){
             main.appendChild(cardCard)
             document.getElementById(`${card_id}`).addEventListener('click', getMoreInfo)
         }
-    })
+    }
 }
 
 function getMoreInfo(e){
@@ -81,7 +113,7 @@ function getMoreInfo(e){
             <section id='cat-sec'></section>
             <button class='remove' id='X'>X</button>
         `
-        document.getElementById('X').addEventListener('click', getCards)
+        document.getElementById('X').addEventListener('click', isFilter)
         document.getElementById(`have-check-${e.target.id}`).addEventListener('click', (e) => {
             addToProfile(e, 'have')
         })
@@ -140,15 +172,14 @@ function getMoreInfo(e){
 
 function addToProfile(e, endpoint){
     let cardID = e.target.id.split('-')[2]
-    axios.post(`${base}/user/${endpoint}`, {cardID, userID: 1}).then((res) => {
-        console.log(res.data)
-    })
+    axios.post(`${base}/user/${endpoint}`, {cardID, userID: 1})
 }
 
 function swoopy(){
     let sidebar = document.getElementById('sidebar')
-    let form = document.getElementById('filter')
-    
+    let filter = document.getElementById('filter')
+    let sort = document.getElementById('sort')
+
     wee.classList.toggle('moved')
 
     if(sidebar.classList == "go-out"){
@@ -163,12 +194,55 @@ function swoopy(){
         sidebar.style.width = "400px";
     }
 
-    if (form.style.display === "flex") {
-        form.style.display = "none";
+    if (filter.style.display === "flex") {
+        filter.style.display = "none";
     } else {
-        form.style.display = "flex";
+        filter.style.display = "flex";
+    }
+
+    if (sort.style.display === "flex") {
+        sort.style.display = "none";
+    } else {
+        sort.style.display = "flex";
     }
 }
 wee.addEventListener('click', swoopy)
 
-getCards()
+function sortBy(e){
+    e.preventDefault()
+    let selectOptions = e.target.children[0].options
+    terms = selectOptions[selectOptions.selectedIndex].value.split(',')
+    isFilter()
+}
+sortForm.addEventListener('submit', sortBy)
+
+function filterBy(e){
+    e.preventDefault()
+    if(e.target.children[1].value === ''){
+        alert('Please fill in the form before hitting submit!')
+    } else {
+        filterTerms = e.target.children[0].id.split('-')
+        if(e.target.children[1].value){
+            filterTerms.push(e.target.children[1].value)
+        } else {
+            filterTerms.push(e.target.children[1].children[0].value, e.target.children[1].children[1].value)
+        }
+
+        if(e.target.classList.contains('deluxe')){
+            filterTerms.push('mega')
+            axios.get(`${base}/cards/megafilter?filter=${filterTerms}`).then((res) => {
+                displayCard(res.data)
+            })
+        } else {
+            axios.get(`${base}/cards/filter?filter=${filterTerms}&order=${terms}`).then((res) => {
+                displayCard(res.data)
+            })
+        }
+    }
+
+}
+for(let i = 0; i < filterForms.length; i++){
+    filterForms[i].addEventListener('submit', filterBy)
+}
+
+getCards(terms)

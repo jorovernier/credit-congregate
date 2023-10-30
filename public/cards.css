@@ -1,4 +1,4 @@
-#filter-main {
+#filter-sort-main {
     width: 100vw;
     display: flex;
     justify-content: space-between;
@@ -12,21 +12,40 @@
 
 #sidebar {
     background-color: rgb(78, 84, 111);
+    min-height: 90vh;
     width: 0px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     position: relative;
 }
 
-#filter {
-    height: 500px;
-    width: 390px;
+#sort {
+    height: 150px;
+    width: 380px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
     position: sticky;
-    top: 30%;
+    top: 15%;
+    padding: 10px;
+    display: none;
+}
+
+#sort > h1 {
+    font-size: 28px;
+}
+
+#filter {
+    height: 450px;
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    position: sticky;
+    top: 40%;
     padding: 10px;
     display: none;
 }
@@ -35,7 +54,7 @@
     font-size: 28px;
 }
 
-#inputs {
+.inputs {
     height: 400px;
     width: 80%;
     display: flex;
@@ -43,7 +62,7 @@
     justify-content: space-evenly;
 }
 
-#inputs > div {
+.inputs > form {
     height: 100px;
     display: flex;
     flex-direction: column;
@@ -52,8 +71,20 @@
     font-size: 20px;
 }
 
+.inp-sel {
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+}
+
 .in {
-    width: 250px
+    width: 250px;
+    box-sizing: border-box;
+}
+
+.in-small {
+    width: 144px;
+    box-sizing: border-box;
 }
 
 /* SIDEBAR SETTINGS */
@@ -64,7 +95,7 @@
     width: 30px;
     border: none;
     position: sticky;
-    top: 55%;
+    top: 50%;
     left: 10px;
     font-size: 20px;
     font-weight: 600;
@@ -99,11 +130,19 @@
 /* CREDIT CARD DISPLAY */
 
 main {
+    height: fit-content;
     width: 95%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     margin-right: 30px;
+}
+
+#none-found {
+    height: 85vh;
+    display: flex;
+    align-items: center;
+    font-size: 40px;
 }
 
 .card-card {
