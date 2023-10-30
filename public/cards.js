@@ -220,6 +220,8 @@ function filterBy(e){
     e.preventDefault()
     if(e.target.children[1].value === ''){
         alert('Please fill in the form before hitting submit!')
+    } else if(e.target.children[1].value && e.target.children[1].value.match(/[;{}|[\]\\]/g)){
+        alert('INVALID ARG')
     } else {
         filterTerms = e.target.children[0].id.split('-')
         if(e.target.children[1].value){
@@ -232,10 +234,16 @@ function filterBy(e){
             filterTerms.push('mega')
             axios.get(`${base}/cards/megafilter?filter=${filterTerms}`).then((res) => {
                 displayCard(res.data)
+                if(e.target.children[1].nodeName === "INPUT"){
+                    e.target.children[1].value = ''
+                }
             })
         } else {
             axios.get(`${base}/cards/filter?filter=${filterTerms}&order=${terms}`).then((res) => {
                 displayCard(res.data)
+                if(e.target.children[1].nodeName === "INPUT"){
+                    e.target.children[1].value = ''
+                }
             })
         }
     }

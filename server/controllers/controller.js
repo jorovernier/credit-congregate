@@ -25,6 +25,8 @@ module.exports = {
         let filter = req.query.filter.split(',')
         let order = req.query.order.split(',')
 
+        filter[3] = filter[3].split("'").join("''")
+
         if(filter[2] === 'LIKE'){
             filter[3] = `%${filter[3]}%`
         }
@@ -36,6 +38,7 @@ module.exports = {
     },
     filterDeluxe: (req, res) => {
         let filter = req.query.filter.split(',')
+        filter[3] = filter[3].split("'").join("''")
         let sql;
         if(filter[1] === 'tags'){
             sql = `SELECT card_id, UNNEST(${filter[1]}) FROM ${filter[0]}
