@@ -9,16 +9,19 @@ main {
 #prof-sec {
     background-color: rgb(78, 84, 111);
     min-height: 100vh;
-    width: 400px;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
     padding: 10px;
     box-sizing: border-box;
 }
 
 #prof-img {
+    max-height: 230px;
     width: 230px;
+    border-radius: 5px;
     margin-top: 50px;
     margin-bottom: 50px;
 }
@@ -32,9 +35,28 @@ main {
     font-size: 28px;
 }
 
-/* #prof-info > hgroup {
-    margin: 10px;
-} */
+#names-div {
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#prof-email {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#edit-names-div {
+    width: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#edit-names-div > input {
+    width: 80px;
+}
 
 /* USER CARDS */
 
@@ -105,7 +127,7 @@ main {
     border: none;
 }
 .keep {
-    background-color: white;
+    background-color: transparent;
     height: 30px;
     width: 30px;
     border: none;
@@ -169,4 +191,10 @@ span {
     width: 250px;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+/* SPECIFICITY */
+
+.pro-btn {
+    background-color: rgb(78, 84, 111);
 }

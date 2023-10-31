@@ -48,6 +48,35 @@ module.exports = {
             VALUES (${userID}, ${cardID}, '');
         `).then(() => res.sendStatus(200))
     },
+    editProfileInfo: (req, res) => {
+        console.log(req.body)
+        let {id} = req.params;
+        let {firstName, lastName, username, email, bio, pic} = req.body.newText
+        let reg = /[;{}|[\]\\]/g
+
+        firstName = firstName.split("'").join("''")
+        lastName = lastName.split("'").join("''")
+        username = username.split("'").join("''")
+        email = email.split("'").join("''")
+        bio = bio.split("'").join("''")
+        pic = pic.split("'").join("''")
+
+        if(firstName.match(reg) || lastName.match(reg) || username.match(reg) || email.match(reg) || bio.match(reg) || pic.match(reg)){
+            res.status(406).send(['{, }, |, \\, \\\\, or ;'])
+        } else {
+            seq.query(`
+                UPDATE users SET
+                first_name = '${firstName}',
+                last_name = '${lastName}',
+                username = '${username}',
+                email = '${email}',
+                bio = '${bio}',
+                profile_pic = '${pic}'
+                WHERE user_id = ${id};
+            `).then(() => res.sendStatus(200))
+            .catch(() => res.status(406).send('Something went wrong.'))
+        }
+    },
     editAquiredInfo: (req, res) => {
         let {id} = req.params;
         let {itemID} = req.body;

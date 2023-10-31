@@ -13,22 +13,53 @@ let editStatus = false
 
 function getUserInfo(){
     axios.get(`${base}/user/1`).then((res) => {
-        let {email, first_name, fico, last_name, password, profile_pic, user_id, username} = res.data[0]
+        let {bio, email, first_name, fico, last_name, password, profile_pic, user_id, username} = res.data[0]
         sideInfo.innerHTML = `
             <img id='prof-img' src=${profile_pic}/>
             <div id='prof-info'>
-                <hgroup>
-                    <h2>${first_name} ${last_name}</h2>
-                    <h1>${username}</h1>
-                </hgroup>
-                <p>${email}</p>
+                <div id='names-div'>
+                    <hgroup id='prof-names'>
+                        <h2 id='prof-flname'>${first_name} ${last_name}</h2>
+                        <h1 id='prof-uname'>${username}</h1>
+                    </hgroup>
+                    <button id='probtn-${user_id}' class='edit-house pro-btn'><img title='Edit' id='proedit-${user_id}' class='edit-icon' src='./pics/edit.png'/></button>
+                </div>
+                <p id='prof-email'>${email}</p>
+                <textarea disabled id='pronotes-${user_id}'>${bio}</textarea>
                 <div>
                     <span>FICO Score: <h1 class='scooch'>${fico}</h1> </span>
                     <span>Total AF: <h1 id='total-af' class='scooch'></h1> </span>
                     <span>Total CL: <h1 id='total-cl' class='scooch'></h1> </span>
                 </div>
+                <p>Change Password</p>
             </div>
         `
+        document.getElementById(`proedit-${user_id}`).addEventListener('click', (e) => {
+            if(!editStatus){
+                document.getElementById()
+                document.getElementById('prof-names').innerHTML = `
+                    <div id='edit-names-div'>
+                        <input id='edit-fname' value='${first_name}'/>
+                        <input id='edit-lname' value='${last_name}'/>
+                    </div>
+                    <input id='edit-uname' value='${username}'/>
+                `
+                document.getElementById('prof-email').innerHTML = `
+                    <input id='edit-email' value='${email}'/>
+                `
+                editTextArea(e, 'pro')
+            } else {
+                let bodyOdyOdy = {
+                    firstName: document.getElementById('edit-fname').value,
+                    lastName: document.getElementById('edit-lname').value,
+                    username: document.getElementById('edit-uname').value,
+                    email: document.getElementById('edit-email').value,
+                    bio: document.getElementById(`pronotes-${user_id}`).value,
+                    pic: 'https://i1.sndcdn.com/artworks-uZI43attXSyAqLZM-zy3yWw-t500x500.jpg/'
+                }
+                sendChanges(bodyOdyOdy, user_id, 'profile')
+            }
+        })
         getUserCards()
         getWantedCards()
     })
@@ -153,7 +184,7 @@ function sendChanges(newText, itemID, endpoint) {
         getUserInfo()
     }).catch((err) => {
         if(err.response.data.length <= 40){
-            alert('Please remove the following characters from your notes: '+err.response.data.join(' '))
+            alert('Please remove the following characters from your entries: '+err.response.data.join(' '))
         } else {
             alert(err.response.data)
         }

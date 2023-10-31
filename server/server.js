@@ -12,7 +12,7 @@ const seq = new Sequelize(process.env.CONNECTION_STRING, {
 })
 
 const {getCards, getCardInfo, filter, filterDeluxe} = require('./controllers/controller')
-const {getUserInfo, getUserCards, getWantedCards, addAquired, addWanted, editAquiredInfo, editWantedNotes} = require('./controllers/user')
+const {getUserInfo, getUserCards, getWantedCards, addAquired, addWanted, editProfileInfo, editAquiredInfo, editWantedNotes} = require('./controllers/user')
 
 app.post('/seed', (req, res) => (seq.query(seedQuery).then(() => res.sendStatus(200))))
 
@@ -26,6 +26,7 @@ app.get('/user/cards/:id', getUserCards)
 app.get('/user/wants/:id', getWantedCards)
 app.post('/user/have', addAquired)
 app.post('/user/want', addWanted)
+app.put('/user/profile/:id', editProfileInfo)
 app.put('/user/haves/:id', editAquiredInfo)
 app.put('/user/wants/:id', editWantedNotes)
 
