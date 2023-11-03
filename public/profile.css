@@ -19,11 +19,28 @@ main {
 }
 
 #prof-img {
-    max-height: 230px;
+    height: 230px;
     width: 230px;
     border-radius: 5px;
     margin-top: 50px;
     margin-bottom: 50px;
+}
+
+.dis {
+    display: none;
+}
+
+.appear {
+    background-color: rgba(0, 0, 0, 0.2);
+    height: 230px;
+    width: 230px;
+    display: block;
+    position: absolute;
+    top: 60px;
+    right: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #prof-info {
@@ -111,6 +128,7 @@ main {
 .pc-img {
     max-height: 350px;
     width: 250px;
+    border-radius: 10px;
 }
 
 .title-info {

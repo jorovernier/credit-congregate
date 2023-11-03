@@ -163,6 +163,7 @@ main {
 .card-img {
     width: 250px;
     margin: 10px;
+    border-radius: 10px;
 }
 
 .title-btn {

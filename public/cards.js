@@ -1,6 +1,7 @@
 const base = 'http://localhost:6789'
 let terms = ['bank_name', 'ASC'];
 let filterTerms;
+let loggedIn = false;
 
 const main = document.querySelector('main')
 const wee = document.querySelector('.wee')
@@ -97,10 +98,13 @@ function getMoreInfo(e){
                             <h2 class='c'>${bank_name}</h2>
                             <h1 class='c'>${card_name}</h1>
                         </hgroup>
-                        <section>
-                            <button class='btn-house'><img title='Have' id='have-check-${e.target.id}' class='house-icon' src='./pics/check.png'/></button>
-                            <button class='btn-house'><img title='Want' id='want-star-${e.target.id}' class='house-icon' src='./pics/star.png'/></button>
-                        </section>
+                        ${loggedIn?
+                            `<section>
+                                <button class='btn-house'><img title='Have' id='have-check-${e.target.id}' class='house-icon' src='./pics/check.png'/></button>
+                                <button class='btn-house'><img title='Want' id='want-star-${e.target.id}' class='house-icon' src='./pics/star.png'/></button>
+                            </section>`
+                            :`<div></div>`
+                        }
                     </div>
                     <p class='c'>Score: ${score}</p>
                     <p class='c'>APR: ${apr}</p>
@@ -114,13 +118,14 @@ function getMoreInfo(e){
             <button class='remove' id='X'>X</button>
         `
         document.getElementById('X').addEventListener('click', isFilter)
-        document.getElementById(`have-check-${e.target.id}`).addEventListener('click', (e) => {
-            addToProfile(e, 'have')
-        })
-        document.getElementById(`want-star-${e.target.id}`).addEventListener('click', (e) => {
-            addToProfile(e, 'want')
-        })
-
+        if(loggedIn){
+            document.getElementById(`have-check-${e.target.id}`).addEventListener('click', (e) => {
+                addToProfile(e, 'have')
+            })
+            document.getElementById(`want-star-${e.target.id}`).addEventListener('click', (e) => {
+                addToProfile(e, 'want')
+            })
+        }
         let section = document.getElementById('cat-sec')
         for(let i = 1; i < res.data.length; i++){
             let {cat_id, tags, cat_name, reward_rate, spend_cap, includes, excludes} = res.data[i]
@@ -145,7 +150,12 @@ function getMoreInfo(e){
         let flatRate = document.createElement('div')
         flatRate.setAttribute('id', `flat-cat`)
         flatRate.classList.add('cat-card')
-        if(section.childElementCount === 0 && reward_type !== 'No Rewards'){
+        if(section.childElementCount === 0 && card_name === 'Travel' && bank_name === 'Discover'){
+            flatRate.innerHTML = `
+            <p id='single-pringle'>This is a flat rate card. That means there are no special categories to earn higher percentages. You'll get unlimited ${flat_rate}${symbol} ${reward_type.toLowerCase()} on all travel purchases.</p>
+            `
+            flatRate.style.width = '400px'
+        } else if(section.childElementCount === 0 && reward_type !== 'No Rewards'){
             flatRate.innerHTML = `
             <p id='single-pringle'>This is a flat rate card. That means there are no special categories to earn higher percentages. You'll get unlimited ${flat_rate}${symbol} ${reward_type.toLowerCase()} on all purchases.</p>
             `

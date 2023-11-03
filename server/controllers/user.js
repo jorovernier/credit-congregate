@@ -51,7 +51,7 @@ module.exports = {
     editProfileInfo: (req, res) => {
         console.log(req.body)
         let {id} = req.params;
-        let {firstName, lastName, username, email, bio, pic} = req.body.newText
+        let {firstName, lastName, username, email, bio} = req.body.newText
         let reg = /[;{}|[\]\\]/g
 
         firstName = firstName.split("'").join("''")
@@ -59,9 +59,8 @@ module.exports = {
         username = username.split("'").join("''")
         email = email.split("'").join("''")
         bio = bio.split("'").join("''")
-        pic = pic.split("'").join("''")
 
-        if(firstName.match(reg) || lastName.match(reg) || username.match(reg) || email.match(reg) || bio.match(reg) || pic.match(reg)){
+        if(firstName.match(reg) || lastName.match(reg) || username.match(reg) || email.match(reg) || bio.match(reg)){
             res.status(406).send(['{, }, |, \\, \\\\, or ;'])
         } else {
             seq.query(`
@@ -70,11 +69,25 @@ module.exports = {
                 last_name = '${lastName}',
                 username = '${username}',
                 email = '${email}',
-                bio = '${bio}',
-                profile_pic = '${pic}'
+                bio = '${bio}'
                 WHERE user_id = ${id};
             `).then(() => res.sendStatus(200))
             .catch(() => res.status(406).send('Something went wrong.'))
+        }
+    },
+    editPicture: (req, res) => {
+        let {id} = req.params;
+        let {pic} = req.body;
+        pic = pic.split("'").join("''")
+        console.log(pic)
+        if(pic.match(/[;{}|[\]\\]/g)){
+            res.status(406).send(['{, }, |, \\, \\\\, or ;'])
+        } else {
+            seq.query(`
+                UPDATE users SET
+                profile_pic = '${pic}'
+                WHERE user_id = ${id};
+            `).then(() => res.sendStatus(200))
         }
     },
     editAquiredInfo: (req, res) => {
@@ -120,5 +133,13 @@ module.exports = {
             `).then(() => res.sendStatus(200))
             .catch((err) => res.status(406).send('Your notes must be 62 characters or less.'))
         }
+    },
+    deleteCards: (req, res) => {
+        let id = req.params.id.split(',');
+        console.log(id)
+        seq.query(`
+            DELETE FROM user_${id[0]}
+            WHERE ${id[1]}_id = ${id[2]};
+        `).then(() => res.sendStatus(200))
     }
 }

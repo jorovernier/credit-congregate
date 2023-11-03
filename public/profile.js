@@ -1,3 +1,8 @@
+const loggedIn = true
+// sessionStorage.setItem("username","jguac")
+// console.log(sessionStorage.getItem('username'))
+
+if(sessionStorage.getItem('username') === 'jguac'){
 const base = 'http://localhost:6789'
 
 const sideInfo = document.getElementById('prof-sec')
@@ -16,6 +21,10 @@ function getUserInfo(){
         let {bio, email, first_name, fico, last_name, password, profile_pic, user_id, username} = res.data[0]
         sideInfo.innerHTML = `
             <img id='prof-img' src=${profile_pic}/>
+            <div id='disappear' class='dis'>
+                <input id='prof-input' placeholder='New Image URL'/>
+                <button id='edit-propic'>Save</button>
+            </div>
             <div id='prof-info'>
                 <div id='names-div'>
                     <hgroup id='prof-names'>
@@ -34,6 +43,27 @@ function getUserInfo(){
                 <p>Change Password</p>
             </div>
         `
+        let disappear = document.getElementById('disappear')
+        document.getElementById('prof-img').addEventListener('mouseover', () => {
+            disappear.classList = 'appear'
+        })
+        disappear.addEventListener('mouseout', () => {
+            disappear.classList = 'dis'
+        })
+
+        document.getElementById('edit-propic').addEventListener('click', () => {
+            axios.put(`${base}/user/profile/pic/1`, {pic: document.getElementById('prof-input').value}).then(() => {
+                getUserInfo()
+            }).catch((err) => {
+                if(err.response.data.length <= 40){
+                    alert('Please remove the following characters from your entries: '+err.response.data.join(' '))
+                } else {
+                    alert(err.response.data)
+                }
+                getUserInfo()
+            })
+        })
+        
         document.getElementById(`proedit-${user_id}`).addEventListener('click', (e) => {
             if(!editStatus){
                 document.getElementById()
@@ -54,8 +84,7 @@ function getUserInfo(){
                     lastName: document.getElementById('edit-lname').value,
                     username: document.getElementById('edit-uname').value,
                     email: document.getElementById('edit-email').value,
-                    bio: document.getElementById(`pronotes-${user_id}`).value,
-                    pic: 'https://i1.sndcdn.com/artworks-uZI43attXSyAqLZM-zy3yWw-t500x500.jpg/'
+                    bio: document.getElementById(`pronotes-${user_id}`).value
                 }
                 sendChanges(bodyOdyOdy, user_id, 'profile')
             }
@@ -101,9 +130,15 @@ function getUserCards(){
                 <div class='span-ta'>
                     <span>Uses: <textarea disabled id='hnotes-${uc_id}' class='uses'>${uses}</textarea> </span> 
                 </div>
-                <button class='remove'>X</button>
+                <button id='rem-${uc_id}' class='remove'>X</button>
             `
             have.appendChild(haveCard)
+            document.getElementById(`rem-${uc_id}`).addEventListener('click', () => {
+                let param = `cards,uc,${uc_id}`
+                axios.delete(`${base}/user/delete/${param}`).then(() => {
+                    getUserInfo()
+                })
+            })
 
             document.getElementById(`hedit-${uc_id}`).addEventListener('click', (e) => {                
                 if(!editStatus){
@@ -152,9 +187,17 @@ function getWantedCards() {
                     <button id='wbtn-${want_id}' class='edit-house'><img title='Edit' id='wedit-${want_id}' class='edit-icon' src='./pics/edit.png'/></button>
                 </section>
                 <textarea disabled id='wnotes-${want_id}' class='want-notes'>${notes}</textarea>
-                <button class='remove'>X</button>
+                <button id='rem-${want_id}' class='remove'>X</button>
             `
             want.appendChild(wantCard)
+
+            document.getElementById(`rem-${want_id}`).addEventListener('click', () => {
+                let param = `wants,want,${want_id}`
+                axios.delete(`${base}/user/delete/${param}`).then(() => {
+                    getUserInfo()
+                })
+            })
+
             document.getElementById(`wedit-${want_id}`).addEventListener('click', (e) => {
                 if(!editStatus){
                     editTextArea(e, 'w')
@@ -193,3 +236,6 @@ function sendChanges(newText, itemID, endpoint) {
 }
 
 getUserInfo()
+} else {
+    window.location.href = 'http://127.0.0.1:5500/public/index.html'
+}
