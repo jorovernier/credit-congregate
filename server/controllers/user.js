@@ -4,6 +4,17 @@ const seq = new Sequelize(process.env.CONNECTION_STRING, {
     dialect: 'postgres'
 })
 
+const reg = /[;{}|[\]\\]/g
+let trig = false;
+
+function splitter(word){
+    console.log(word)
+    if(word.match(reg)){
+        trig = true
+    }
+    return word.split("'").join("''")
+}
+
 module.exports = {
     getUserInfo: (req, res) => {
         let {id} = req.params;
@@ -49,18 +60,15 @@ module.exports = {
         `).then(() => res.sendStatus(200))
     },
     editProfileInfo: (req, res) => {
-        console.log(req.body)
         let {id} = req.params;
-        let {firstName, lastName, username, email, bio} = req.body.newText
-        let reg = /[;{}|[\]\\]/g
+        let {newText} = req.body;
+        
+        for(prop in newText){
+            newText[prop] = splitter(newText[prop])
+        }
+        let {firstName, lastName, username, email, bio} = newText
 
-        firstName = firstName.split("'").join("''")
-        lastName = lastName.split("'").join("''")
-        username = username.split("'").join("''")
-        email = email.split("'").join("''")
-        bio = bio.split("'").join("''")
-
-        if(firstName.match(reg) || lastName.match(reg) || username.match(reg) || email.match(reg) || bio.match(reg)){
+        if(trig){
             res.status(406).send(['{, }, |, \\, \\\\, or ;'])
         } else {
             seq.query(`
@@ -72,15 +80,16 @@ module.exports = {
                 bio = '${bio}'
                 WHERE user_id = ${id};
             `).then(() => res.sendStatus(200))
-            .catch(() => res.status(406).send('Something went wrong.'))
+            .catch(() => res.status(400).send('One of your input fields has too many characters!'))
         }
     },
     editPicture: (req, res) => {
         let {id} = req.params;
         let {pic} = req.body;
-        pic = pic.split("'").join("''")
-        console.log(pic)
-        if(pic.match(/[;{}|[\]\\]/g)){
+
+        pic = splitter(pic)
+
+        if(trig){
             res.status(406).send(['{, }, |, \\, \\\\, or ;'])
         } else {
             seq.query(`
@@ -92,17 +101,14 @@ module.exports = {
     },
     editAquiredInfo: (req, res) => {
         let {id} = req.params;
-        let {itemID} = req.body;
-        let {img, nickname, apr, limit, uses} = req.body.newText
-        let reg = /[;{}|[\]\\]/g
-
-        img = img.split("'").join("''")
-        nickname = nickname.split("'").join("''")
-        apr = apr.split("'").join("''")
-        limit = limit.split("'").join("''")
-        uses = uses.split("'").join("''")
+        let {itemID, newText} = req.body;
         
-        if(img.match(reg) || nickname.match(reg) || apr.match(reg) || limit.match(reg) || uses.match(reg)){
+        for(prop in newText){
+            newText[prop] = splitter(newText[prop])
+        }
+        let {img, nickname, apr, limit, uses} = newText
+
+        if(trig){
             res.status(406).send(['{, }, |, \\, \\\\, or ;'])
         } else {
             seq.query(`
@@ -120,23 +126,21 @@ module.exports = {
     editWantedNotes: (req, res) => {
         let {id} = req.params;
         let {newText, itemID} = req.body;
-        if(newText.includes("'")){
-            newText = newText.split("'").join("''")
-        }
-        if(newText.match(/[;{}()|[\]\\]/g)){
-            res.status(406).send(newText.match(/[;{}()|[\]\\]/g))
+        newText = splitter(newText)
+
+        if(trig){
+            res.status(406).send(newText.match(reg))
         } else {
             seq.query(`
                 UPDATE user_wants
                 SET notes = '${newText}'
                 WHERE want_id = ${itemID} AND user_id = ${id};
             `).then(() => res.sendStatus(200))
-            .catch((err) => res.status(406).send('Your notes must be 62 characters or less.'))
+            .catch(() => res.status(406).send('Your notes must be 62 characters or less.'))
         }
     },
     deleteCards: (req, res) => {
         let id = req.params.id.split(',');
-        console.log(id)
         seq.query(`
             DELETE FROM user_${id[0]}
             WHERE ${id[1]}_id = ${id[2]};

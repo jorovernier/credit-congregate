@@ -1,6 +1,5 @@
 const loggedIn = true
 // sessionStorage.setItem("username","jguac")
-// console.log(sessionStorage.getItem('username'))
 
 if(sessionStorage.getItem('username') === 'jguac'){
 const base = 'http://localhost:6789'
@@ -18,7 +17,7 @@ let editStatus = false
 
 function getUserInfo(){
     axios.get(`${base}/user/1`).then((res) => {
-        let {bio, email, first_name, fico, last_name, password, profile_pic, user_id, username} = res.data[0]
+        let {user_id, first_name, last_name, username, email, password, bio, profile_pic, fico} = res.data[0]
         sideInfo.innerHTML = `
             <img id='prof-img' src=${profile_pic}/>
             <div id='disappear' class='dis'>
@@ -66,16 +65,16 @@ function getUserInfo(){
         
         document.getElementById(`proedit-${user_id}`).addEventListener('click', (e) => {
             if(!editStatus){
-                document.getElementById()
+                console.log(username)
                 document.getElementById('prof-names').innerHTML = `
                     <div id='edit-names-div'>
-                        <input id='edit-fname' value='${first_name}'/>
-                        <input id='edit-lname' value='${last_name}'/>
+                        <input id='edit-fname' value="${first_name}"/>
+                        <input id='edit-lname' value="${last_name}"/>
                     </div>
-                    <input id='edit-uname' value='${username}'/>
+                    <input id='edit-uname' value="${username}"/>
                 `
                 document.getElementById('prof-email').innerHTML = `
-                    <input id='edit-email' value='${email}'/>
+                    <input type='email' id='edit-email' value="${email}"/>
                 `
                 editTextArea(e, 'pro')
             } else {
@@ -100,7 +99,7 @@ function getUserCards(){
         let totalAF = 0
         let totalCL = 0
         for(let i = 0; i < res.data.length; i++){
-            const {af, apr, bank_name, card_img, card_name, cl, nickname, uc_id, uses, cust_img} = res.data[i]
+            const {uc_id, apr, cl, nickname, cust_img, uses, card_name, bank_name, card_img, af} = res.data[i]
             totalAF += af
             totalCL += cl
 
@@ -142,23 +141,23 @@ function getUserCards(){
 
             document.getElementById(`hedit-${uc_id}`).addEventListener('click', (e) => {                
                 if(!editStatus){
-                    document.querySelector(`.bro-${uc_id}`).innerHTML = `<input class='have-input inp-big' id='himg-${uc_id}' placeholder='Leave blank for original image' value='${cust_img ? cust_img:card_img}'/>`
+                    document.querySelector(`.bro-${uc_id}`).innerHTML = `<input class='have-input inp-big' id='himg-${uc_id}' placeholder='Leave blank for original image' value="${cust_img ? cust_img:card_img}"/>`
                     let haveSpans = document.querySelectorAll(`.have-span-${uc_id}`)
                     for(let i = 0; i < haveSpans.length; i++){
                         let text = haveSpans[i].childNodes[1].textContent
-                        haveSpans[i].innerHTML = `<input class='have-input inp-small' id='hinp-${i}' value='${text}'/>`
+                        haveSpans[i].innerHTML = `<input class='have-input inp-small' id='hinp-${i}' value="${text}"/>`
                     }
                     document.getElementById(`hinp-0`).style.width = '100px'
                     editTextArea(e, 'h')
                 } else {
-                    let body = {
+                    let bodyOdyOdy = {
                         img: document.getElementById(`himg-${uc_id}`).value,
                         nickname: document.getElementById(`hinp-0`).value,
                         apr: document.getElementById(`hinp-1`).value,
                         limit: document.getElementById(`hinp-2`).value,
                         uses: document.getElementById(`hnotes-${uc_id}`).value
                     }
-                    sendChanges(body, e.target.id.split('-')[1], 'haves')
+                    sendChanges(bodyOdyOdy, e.target.id.split('-')[1], 'haves')
                 }
             })
             document.getElementById('total-af').textContent = `$${totalAF}`

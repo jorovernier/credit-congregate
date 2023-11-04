@@ -1,7 +1,7 @@
 const base = 'http://localhost:6789'
 let terms = ['bank_name', 'ASC'];
 let filterTerms;
-let loggedIn = false;
+let loggedIn = true;
 
 const main = document.querySelector('main')
 const wee = document.querySelector('.wee')
@@ -11,9 +11,7 @@ const filterForms = document.querySelectorAll('.filter-form')
 function isFilter(){
     if(filterTerms) {
         if(filterTerms[filterTerms.length - 1] === 'mega'){
-            console.log('hit')
             axios.get(`${base}/cards/megafilter?filter=${filterTerms}`).then((res) => {
-                console.log('hit')
                 displayCard(res.data)
             })
         } else if(filterTerms){
@@ -65,7 +63,7 @@ function getMoreInfo(e){
     moreBtns.forEach(btn => btn.style.display = 'none')
     document.documentElement.scrollTop = 0
     axios.get(`${base}/card/${e.target.id}`).then((res) => {
-        let {af, apr, bank_name, card_id, card_img, card_name, flat_rate, notes, reward_type, score, sub} = res.data[0]
+        let {af, apr, bank_name, card_id, card_img, card_name, ff, flat_rate, notes, reward_type, score, secured, student, sub} = res.data[0]
 
         let symbol;
         if(reward_type === 'c'){
@@ -127,6 +125,7 @@ function getMoreInfo(e){
             })
         }
         let section = document.getElementById('cat-sec')
+
         for(let i = 1; i < res.data.length; i++){
             let {cat_id, tags, cat_name, reward_rate, spend_cap, includes, excludes} = res.data[i]
 
@@ -142,7 +141,7 @@ function getMoreInfo(e){
             category.classList.add('cat-card')
             category.innerHTML = `
                 <p>You'll get ${reward_rate}${symbol} ${reward_type.toLowerCase()} on all ${cat_name} purchases with ${spend_cap === '' ? 'no':`a $${spend_cap}`} limit.</p>
-                <p>This includes ${includes} and excludes ${excludes}.</p>
+                <p>This includes ${includes}${excludes === 'nothing'?`.`:` and excludes ${excludes}.`}</p>
             `
             section.appendChild(category)
         }
@@ -244,17 +243,14 @@ function filterBy(e){
             filterTerms.push('mega')
             axios.get(`${base}/cards/megafilter?filter=${filterTerms}`).then((res) => {
                 displayCard(res.data)
-                if(e.target.children[1].nodeName === "INPUT"){
-                    e.target.children[1].value = ''
-                }
             })
         } else {
             axios.get(`${base}/cards/filter?filter=${filterTerms}&order=${terms}`).then((res) => {
                 displayCard(res.data)
-                if(e.target.children[1].nodeName === "INPUT"){
-                    e.target.children[1].value = ''
-                }
             })
+        }
+        if(e.target.children[1].nodeName === "INPUT"){
+            e.target.children[1].value = ''
         }
     }
 

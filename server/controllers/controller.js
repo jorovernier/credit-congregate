@@ -38,7 +38,9 @@ module.exports = {
     },
     filterDeluxe: (req, res) => {
         let filter = req.query.filter.split(',')
+        
         filter[3] = filter[3].split("'").join("''")
+        
         let sql;
         if(filter[1] === 'tags'){
             sql = `SELECT card_id, UNNEST(${filter[1]}) FROM ${filter[0]}
@@ -53,8 +55,8 @@ module.exports = {
                 let toSend = []
                 let cards = new Set([])
 
-                const test = (timer) => {
-                    if(toSend.length === timer){
+                const timer = (count) => {
+                    if(toSend.length === count){
                         res.status(200).send(toSend)
                     }
                 }
@@ -69,7 +71,7 @@ module.exports = {
                         WHERE card_id = ${cards[i]};
                     `).then(dbRes2 => {
                         toSend.push(dbRes2[0][0])
-                        test(cards.length)
+                        timer(cards.length)
                     })
                 }
             } else {
