@@ -190,10 +190,12 @@ function swoopy(){
     let sort = document.getElementById('sort')
 
     wee.classList.toggle('moved')
-
+    
     if(sidebar.classList == "go-out"){
         sidebar.classList = "go-in";
+        wee.textContent = '>'
     } else {
+        wee.textContent = '<'
         sidebar.classList = "go-out";
     }
 

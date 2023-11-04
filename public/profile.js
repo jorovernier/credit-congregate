@@ -27,12 +27,12 @@ function getUserInfo(){
             <div id='prof-info'>
                 <div id='names-div'>
                     <hgroup id='prof-names'>
-                        <h2 id='prof-flname'>${first_name} ${last_name}</h2>
-                        <h1 id='prof-uname'>${username}</h1>
+                        <h2 class='wrap' id='prof-flname'>${first_name} ${last_name}</h2class=id=>
+                        <h1 class='wrap' id='prof-uname'>${username}</h1>
                     </hgroup>
                     <button id='probtn-${user_id}' class='edit-house pro-btn'><img title='Edit' id='proedit-${user_id}' class='edit-icon' src='./pics/edit.png'/></button>
                 </div>
-                <p id='prof-email'>${email}</p>
+                <p class='wrap' id='prof-email'>${email}</p>
                 <textarea disabled id='pronotes-${user_id}'>${bio}</textarea>
                 <div>
                     <span>FICO Score: <h1 class='scooch'>${fico}</h1> </span>

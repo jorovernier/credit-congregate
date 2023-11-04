@@ -32,7 +32,7 @@ module.exports = {
         }
         seq.query(`
             SELECT * FROM ${filter[0]}
-            WHERE ${filter[1]} ${filter[2]} '${filter[3]}'
+            WHERE ${filter[1]} ${filter[2]} LOWER('${filter[3]}')
             ORDER BY ${order[0]} ${order[1]};
         `).then(dbRes => res.status(200).send(dbRes[0]))
     },
@@ -43,8 +43,8 @@ module.exports = {
         
         let sql;
         if(filter[1] === 'tags'){
-            sql = `SELECT card_id, UNNEST(${filter[1]}) FROM ${filter[0]}
-            WHERE '${filter[3]}' ${filter[2]} ANY(${filter[1]});`
+            sql = `SELECT card_id, tag FROM ${filter[0]}, UNNEST(${filter[1]}) AS tag
+            WHERE tag ${filter[2]} '%${filter[3]}%';`
         } else {
             sql = `SELECT card_id FROM ${filter[0]}
             WHERE ${filter[1]} ${filter[2]} ${filter[3]};`

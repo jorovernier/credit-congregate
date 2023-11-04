@@ -44,7 +44,7 @@ main {
 }
 
 #prof-info {
-    height: 300px;
+    max-height: 400px;
     width: 250px;
     display: flex;
     flex-direction: column;
@@ -59,11 +59,15 @@ main {
     align-items: center;
 }
 
+.wrap {
+    display: inline-block;
+    word-break: break-all;
+}
+
 #prof-email {
     font-size: 20px;
     margin-top: 10px;
     margin-bottom: 10px;
-    word-wrap: break-word
 }
 
 #edit-names-div {
