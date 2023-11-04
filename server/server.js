@@ -11,8 +11,9 @@ const seq = new Sequelize(process.env.CONNECTION_STRING, {
     dialect: 'postgres'
 })
 
-const {getCards, getCardInfo, filter} = require('./controllers/controller')
-const {getUserInfo, getUserCards, getWantedCards, addAquired, addWanted, editProfileInfo, editPicture, editAquiredInfo, editWantedNotes, deleteCards} = require('./controllers/user')
+const {getCards, getCardInfo, filter} = require('./controllers/cards')
+const {getUserInfo, editUserInfo, editPicture, editPassword} = require('./controllers/user')
+const {getAcquired, getWanted, addAcquired, addWanted, editAcquired, editWanted, deleteCards} = require('./controllers/profileCards')
 
 app.post('/seed', (req, res) => (seq.query(seedQuery).then(() => res.sendStatus(200))))
 
@@ -21,14 +22,15 @@ app.get('/card/:id', getCardInfo)
 app.get('/cards/filter', filter)
 
 app.get('/user/:id', getUserInfo)
-app.get('/user/cards/:id', getUserCards)
-app.get('/user/wants/:id', getWantedCards)
-app.post('/user/have', addAquired)
-app.post('/user/want', addWanted)
-app.put('/user/profile/:id', editProfileInfo)
+app.put('/user/profile/:id', editUserInfo)
 app.put('/user/profile/pic/:id', editPicture)
-app.put('/user/haves/:id', editAquiredInfo)
-app.put('/user/wants/:id', editWantedNotes)
+
+app.get('/user/cards/:id', getAcquired)
+app.get('/user/wants/:id', getWanted)
+app.post('/user/have', addAcquired)
+app.post('/user/want', addWanted)
+app.put('/user/haves/:id', editAcquired)
+app.put('/user/wants/:id', editWanted)
 app.delete('/user/delete/:id', deleteCards)
 
 app.listen(process.env.PORT, () => console.log(`Applying for credit cards on port ${process.env.PORT}.`))
