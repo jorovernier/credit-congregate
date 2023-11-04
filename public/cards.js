@@ -6,7 +6,7 @@ let loggedIn = true;
 const main = document.querySelector('main')
 const wee = document.querySelector('.wee')
 const sortForm = document.getElementById('sort-form')
-const filterForms = document.querySelectorAll('.filter-form')
+const filterForm = document.getElementById('filter-form')
 
 function isFilter(){
     if(filterTerms) {
@@ -73,7 +73,6 @@ function getMoreInfo(e){
             reward_type = 'No Rewards'
             symbol = ''
         }
-
         
         let clicked = document.getElementById(`card-${e.target.id}`)
         clicked.classList = 'clicked'
@@ -223,29 +222,27 @@ sortForm.addEventListener('submit', sortBy)
 
 function filterBy(e){
     e.preventDefault()
-    if(e.target.children[1].value === ''){
-        alert('Please fill in the form before hitting submit!')
-    } else if(e.target.children[1].value && e.target.children[1].value.match(/[;{}|[\]\\]/g)){
+    const reg = /[;{}|[\]\\]/g
+    let bank = document.getElementById('by-bank')
+    let tag = document.getElementById('by-cat')
+    let symbol = document.getElementById('gorl')
+    let rate = document.getElementById('gorl-num')
+    let type = document.getElementById('by-type')
+    
+    if(bank.value.match(reg), tag.value.match(reg), symbol.value.match(reg), rate.value.match(reg), type.value.match(reg)){
         alert('INVALID ARG')
     } else {
-        filterTerms = e.target.children[0].id.split('-')
-        if(e.target.children[1].value){
-            filterTerms.push(e.target.children[1].value)
-        } else {
-            filterTerms.push(e.target.children[1].children[0].value, e.target.children[1].children[1].value)
-        }
+        filterTerms = [bank.value, tag.value, symbol.value, rate.value, type.value]
 
         axios.get(`${base}/cards/filter?filter=${filterTerms}&order=${terms}`).then((res) => {
+            bank.value = ''
+            tag.value = ''
             displayCard(res.data)
         })
-        if(e.target.children[1].nodeName === "INPUT"){
-            e.target.children[1].value = ''
-        }
     }
 
 }
-for(let i = 0; i < filterForms.length; i++){
-    filterForms[i].addEventListener('submit', filterBy)
-}
+filterForm.addEventListener('submit', filterBy)
+
 
 getCards(terms)

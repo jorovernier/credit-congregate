@@ -22,39 +22,43 @@ module.exports = {
         `).then(dbRes => res.status(200).send(dbRes[0]))
     },
     filter: (req, res) => {
-        let sql;
         let filter = req.query.filter.split(',')
         let order = req.query.order.split(',')
-        filter[3] = filter[3].split("'").join("''")
-        if(filter[1] === 'tags'){
-            sql = `
-            SELECT * FROM (
-                SELECT card_id, tag 
-                FROM ${filter[0]}, UNNEST(${filter[1]}) AS tag
-                WHERE tag ${filter[2]} '%${filter[3]}%'
-                ) AS c
-            JOIN cards
-            ON c.card_id = cards.card_id
-            ORDER BY ${order[0]} ${order[1]};`
-        } else if(filter[2] === 'LIKE'){
-            filter[3] = `%${filter[3]}%`
-            sql = `
-                SELECT * FROM ${filter[0]}
-                WHERE LOWER(${filter[1]}) ${filter[2]} LOWER('${filter[3]}')
-                ORDER BY ${order[0]} ${order[1]};
-            `
-        } else {
-            sql = `
-                SELECT * FROM (
-                    SELECT card_id FROM ${filter[0]} 
-                    WHERE ${filter[1]} ${filter[2]} '${filter[3]}'
-                    ) AS c
-                JOIN cards
-                ON c.card_id = cards.card_id
-                GROUP BY c.card_id, cards.card_id
-                ORDER BY ${order[0]} ${order[1]};
-            `
-        }
-        seq.query(sql).then(dbRes => res.status(200).send(dbRes[0]))
+        seq.query(`
+            SELECT card_id, card_name, bank_name, card_img, notes, reward_type, flat_rate, sub, af, apr, score, secured, student, ff FROM (
+                SELECT * FROM 
+                (
+                    SELECT card_id AS cc_id FROM cards
+                ) AS const,
+                (
+                    SELECT card_id AS bn_id 
+                    FROM cards
+                    WHERE LOWER(bank_name) LIKE LOWER('%${filter[0]}%')
+                ) AS bns,
+                (
+                    SELECT card_id AS t_id, tag 
+                    FROM categories, UNNEST(tags) AS tag
+                    WHERE tag LIKE LOWER('%${filter[1]}%')
+                ) AS ts,
+                (
+                    SELECT card_id AS rr_id 
+                    FROM categories 
+                    WHERE reward_rate ${filter[2] === 'gt' ? '>':'<'} ${filter[3]}
+                ) AS rrs,
+                (
+                    SELECT card_id AS rt_id 
+                    FROM cards
+                    WHERE reward_type LIKE '${filter[4]}'
+                ) AS rts
+                WHERE const.cc_id = ts.t_id 
+                AND const.cc_id = bns.bn_id 
+                AND const.cc_id = rrs.rr_id 
+                AND const.cc_id = rts.rt_id
+            ) AS g
+            JOIN cards 
+            ON g.cc_id = cards.card_id
+            GROUP BY cards.card_id
+            ORDER BY ${order[0]} ${order[1]};
+        `).then(dbRes => res.status(200).send(dbRes[0]))
     }
 }

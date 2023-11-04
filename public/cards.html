@@ -56,51 +56,51 @@
                 <div id="filter">
                     <h1>Filter By</h1>
 
-                    <section class="inputs">
-                        <form class="filter-form">
-                            <label id="cards-bank_name-LIKE" for="by-bank">Bank</label>
-                            <input placeholder="Search results are case-sensitive!" class="in" type="text" id="by-bank"/>
-                            <input id="bank-sub" class="steez" type="submit"/>
-                        </form>
-                        
-                        <form class="filter-form deluxe">
-                            <label id="categories-tags-LIKE" for="by-cat">Category</label>
-                            <input placeholder="Try grocery, transportation, dining, etc..." class="in" type="text" id="by-cat"/>
-                            <input id="cat-sub" class="steez" type="submit"/>
-                        </form>
-
-                        <form class="filter-form deluxe">
-                            <label id="categories-reward_rate" for="rate-sub">Reward Rate</label>
-                            <div>
-                                <select id="gorl">
-                                    <option value=">" selected>Greater Than</option>
-                                    <option value="<">Less Than</option>
-                                </select>
-                                <select id="gorl-num">
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
+                    <section>
+                        <form id="filter-form">
+                            <div class="form-div">
+                                <label for="by-bank">Bank</label>
+                                <input placeholder="Try america, bank, union, etc..." class="in" type="text" id="by-bank"/>
+                            </div>
+                            
+                            <div class="form-div">
+                                <label for="by-cat">Category</label>
+                                <input placeholder="Try grocery, transportation, dining, etc..." class="in" type="text" id="by-cat"/>
+                            </div>
+    
+                            <div class="form-div">
+                                <label for="gorl">Reward Rate</label>
+                                <div>
+                                    <select id="gorl">
+                                        <option value="gt" selected>Greater Than</option>
+                                        <option value="lt">Less Than</option>
+                                    </select>
+                                    <select id="gorl-num">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </div>
+                            </div>
+    
+                            <div class="form-div">
+                                <label for="by-type">Reward Type</label>
+                                <select class="in" id="by-type">
+                                    <option value="%%" selected>Any</option>
+                                    <option value="c">Cashback</option>
+                                    <option value="p">Points</option>
+                                    <option value="m">Miles</option>
+                                    <option value="n">None</option>
                                 </select>
                             </div>
-                            <input id="rate-sub" class="steez" type="submit"/>
-                        </form>
-
-                        <form class="filter-form">
-                            <label id="cards-reward_type-=" for="by-type">Reward Type</label>
-                            <select class="in" id="by-type">
-                                <option value="c" selected>Cashback</option>
-                                <option value="p">Points</option>
-                                <option value="m">Miles</option>
-                                <option value="n">None</option>
-                            </select>
                             <input id="type-sub" class="steez" type="submit"/>
                         </form>
                     </section>
