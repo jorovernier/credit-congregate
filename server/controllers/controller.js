@@ -22,62 +22,39 @@ module.exports = {
         `).then(dbRes => res.status(200).send(dbRes[0]))
     },
     filter: (req, res) => {
+        let sql;
         let filter = req.query.filter.split(',')
         let order = req.query.order.split(',')
-
         filter[3] = filter[3].split("'").join("''")
-
-        if(filter[2] === 'LIKE'){
-            filter[3] = `%${filter[3]}%`
-        }
-        seq.query(`
-            SELECT * FROM ${filter[0]}
-            WHERE ${filter[1]} ${filter[2]} LOWER('${filter[3]}')
-            ORDER BY ${order[0]} ${order[1]};
-        `).then(dbRes => res.status(200).send(dbRes[0]))
-    },
-    filterDeluxe: (req, res) => {
-        let filter = req.query.filter.split(',')
-        
-        filter[3] = filter[3].split("'").join("''")
-        
-        let sql;
         if(filter[1] === 'tags'){
-            sql = `SELECT card_id, tag FROM ${filter[0]}, UNNEST(${filter[1]}) AS tag
-            WHERE tag ${filter[2]} '%${filter[3]}%';`
+            sql = `
+            SELECT * FROM (
+                SELECT card_id, tag 
+                FROM ${filter[0]}, UNNEST(${filter[1]}) AS tag
+                WHERE tag ${filter[2]} '%${filter[3]}%'
+                ) AS c
+            JOIN cards
+            ON c.card_id = cards.card_id
+            ORDER BY ${order[0]} ${order[1]};`
+        } else if(filter[2] === 'LIKE'){
+            filter[3] = `%${filter[3]}%`
+            sql = `
+                SELECT * FROM ${filter[0]}
+                WHERE LOWER(${filter[1]}) ${filter[2]} LOWER('${filter[3]}')
+                ORDER BY ${order[0]} ${order[1]};
+            `
         } else {
-            sql = `SELECT card_id FROM ${filter[0]}
-            WHERE ${filter[1]} ${filter[2]} ${filter[3]};`
+            sql = `
+                SELECT * FROM (
+                    SELECT card_id FROM ${filter[0]} 
+                    WHERE ${filter[1]} ${filter[2]} '${filter[3]}'
+                    ) AS c
+                JOIN cards
+                ON c.card_id = cards.card_id
+                GROUP BY c.card_id, cards.card_id
+                ORDER BY ${order[0]} ${order[1]};
+            `
         }
-    
-        seq.query(sql).then(dbRes => {
-            if(dbRes[0].length > 0){
-                let toSend = []
-                let cards = new Set([])
-
-                const timer = (count) => {
-                    if(toSend.length === count){
-                        res.status(200).send(toSend)
-                    }
-                }
-
-                for(let i = 0; i < dbRes[0].length; i++){
-                    cards.add(dbRes[0][i].card_id)
-                }
-                cards = [...cards]
-                for(let i = 0; i < cards.length; i++){
-                    seq.query(`
-                        SELECT * FROM cards
-                        WHERE card_id = ${cards[i]};
-                    `).then(dbRes2 => {
-                        toSend.push(dbRes2[0][0])
-                        timer(cards.length)
-                    })
-                }
-            } else {
-                res.status(200).send([])
-            }
-        })
-        
+        seq.query(sql).then(dbRes => res.status(200).send(dbRes[0]))
     }
 }

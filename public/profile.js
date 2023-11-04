@@ -1,7 +1,7 @@
 const loggedIn = true
-// sessionStorage.setItem("username","jguac")
+// localStorage.setItem("username","jguac")
 
-if(sessionStorage.getItem('username') === 'jguac'){
+if(localStorage.getItem('username') === 'jguac'){
 const base = 'http://localhost:6789'
 
 const sideInfo = document.getElementById('prof-sec')

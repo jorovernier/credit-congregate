@@ -10,15 +10,9 @@ const filterForms = document.querySelectorAll('.filter-form')
 
 function isFilter(){
     if(filterTerms) {
-        if(filterTerms[filterTerms.length - 1] === 'mega'){
-            axios.get(`${base}/cards/megafilter?filter=${filterTerms}`).then((res) => {
-                displayCard(res.data)
-            })
-        } else if(filterTerms){
-            axios.get(`${base}/cards/filter?filter=${filterTerms}&order=${terms}`).then((res) => {
-                displayCard(res.data)
-            })
-        }
+        axios.get(`${base}/cards/filter?filter=${filterTerms}&order=${terms}`).then((res) => {
+            displayCard(res.data)
+        })
     } else {
         getCards(terms)
     }
@@ -241,16 +235,9 @@ function filterBy(e){
             filterTerms.push(e.target.children[1].children[0].value, e.target.children[1].children[1].value)
         }
 
-        if(e.target.classList.contains('deluxe')){
-            filterTerms.push('mega')
-            axios.get(`${base}/cards/megafilter?filter=${filterTerms}`).then((res) => {
-                displayCard(res.data)
-            })
-        } else {
-            axios.get(`${base}/cards/filter?filter=${filterTerms}&order=${terms}`).then((res) => {
-                displayCard(res.data)
-            })
-        }
+        axios.get(`${base}/cards/filter?filter=${filterTerms}&order=${terms}`).then((res) => {
+            displayCard(res.data)
+        })
         if(e.target.children[1].nodeName === "INPUT"){
             e.target.children[1].value = ''
         }

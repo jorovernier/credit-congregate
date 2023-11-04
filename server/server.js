@@ -11,7 +11,7 @@ const seq = new Sequelize(process.env.CONNECTION_STRING, {
     dialect: 'postgres'
 })
 
-const {getCards, getCardInfo, filter, filterDeluxe} = require('./controllers/controller')
+const {getCards, getCardInfo, filter} = require('./controllers/controller')
 const {getUserInfo, getUserCards, getWantedCards, addAquired, addWanted, editProfileInfo, editPicture, editAquiredInfo, editWantedNotes, deleteCards} = require('./controllers/user')
 
 app.post('/seed', (req, res) => (seq.query(seedQuery).then(() => res.sendStatus(200))))
@@ -19,7 +19,6 @@ app.post('/seed', (req, res) => (seq.query(seedQuery).then(() => res.sendStatus(
 app.get('/cards', getCards)
 app.get('/card/:id', getCardInfo)
 app.get('/cards/filter', filter)
-app.get('/cards/megafilter', filterDeluxe)
 
 app.get('/user/:id', getUserInfo)
 app.get('/user/cards/:id', getUserCards)
